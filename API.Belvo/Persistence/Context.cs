@@ -18,9 +18,9 @@ namespace API.Belvo.Persistence
         public virtual DbSet<Cuenta> Cuentas { get; set; }
 
         // L
-        //public virtual DbSet<Link> Links { get; set; }
+        public virtual DbSet<Link> Links { get; set; }
 
         // T
-        //public virtual DbSet<Transaccion> Transacciones { get; set; }
+        public virtual DbSet<Transaccion> Transacciones { get; set; }
     }
 }

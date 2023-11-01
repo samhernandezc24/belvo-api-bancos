@@ -4,7 +4,6 @@ namespace API.Belvo.Libraries
 {
     public class WebServiceManager
     {
-        //protected WebServiceManager() { }
         public static async Task<dynamic> Get(string url, IEnumerable<dynamic> headers, List<dynamic> parameters = null)
         {
             try
