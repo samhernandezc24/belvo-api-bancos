@@ -5,11 +5,10 @@ namespace API.Belvo.Services
 {
     public class BelvoService
     {
-        static string url = "https://sandbox.belvo.com/";
-
+        static string belvoApiUrl = "https://sandbox.belvo.com/";
         public readonly Context _context;
 
-        public static IEnumerable<dynamic> lstHeaders = new List<dynamic>().Append(new { name = "Authorization", value = "Basic N2E0NTUyNjUtYjVmNS00NmJkLTllNjUtYmVhYTg4NTg1MWU1OkRAeWxtYSNFaHpyVDM0bzUxVXZ6czJqQlVpQzhvcUEwTGxRZUN6bHlfWFU5alI4RkE0OV9kMVB0ZXJVOFVHTEM=" });
+        // public static IEnumerable<dynamic> lstHeaders = new List<dynamic>().Append(new { name = "Authorization", value = "Basic N2E0NTUyNjUtYjVmNS00NmJkLTllNjUtYmVhYTg4NTg1MWU1OkRAeWxtYSNFaHpyVDM0bzUxVXZ6czJqQlVpQzhvcUEwTGxRZUN6bHlfWFU5alI4RkE0OV9kMVB0ZXJVOFVHTEM=" });
 
         public BelvoService (Context context)
         {
@@ -19,10 +18,17 @@ namespace API.Belvo.Services
         // A
         #region ACCOUNTS
 
-        public static async Task<dynamic> AccountsList()
+        public static async Task<dynamic> GetAccountsList(List<dynamic> headers)
         {
-            var result = await WebServiceManager.Get(url + "api/accounts", lstHeaders);
-            return result;
+            try
+            {
+                return await WebServiceManager.Get(belvoApiUrl + "api/accounts", headers: headers);
+            }
+            catch (Exception e)
+            {
+                // Manejar la excepción.
+                throw new Exception(e.Message);
+            }
         }
 
         public static async Task<dynamic> AccountsCreate(dynamic parameters)
