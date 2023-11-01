@@ -25,4 +25,8 @@
     <PackageReference Include="Workcube.Dependencias" Version="1.0.51" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>
