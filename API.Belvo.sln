@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34202.233
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API.Belvo", "API.Belvo\API.Belvo.csproj", "{A3A4C79E-A3B5-43B5-A851-6C33A8E76DA7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A3A4C79E-A3B5-43B5-A851-6C33A8E76DA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3A4C79E-A3B5-43B5-A851-6C33A8E76DA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3A4C79E-A3B5-43B5-A851-6C33A8E76DA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3A4C79E-A3B5-43B5-A851-6C33A8E76DA7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4648B9FD-78FE-4E24-82C7-E7A8E3C8264C}
+	EndGlobalSection
+EndGlobal
