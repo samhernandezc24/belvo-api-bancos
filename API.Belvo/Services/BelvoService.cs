@@ -27,13 +27,13 @@ namespace API.Belvo.Services
             catch (Exception e)
             {
                 // Manejar la excepción.
-                throw new Exception(e.Message);
+                throw new ArgumentException(e.Message + e.StackTrace);
             }
         }
 
         public static async Task<dynamic> AccountsCreate(dynamic parameters)
         {
-            var result = await WebServiceManager.Post(url + "api/accounts", lstHeaders, parameters);
+            var result = await WebServiceManager.Post(belvoApiUrl + "api/accounts", parameters);
             return result;
         }
 
