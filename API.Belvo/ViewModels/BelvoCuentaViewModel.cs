@@ -69,6 +69,7 @@
         public string contract_end_date { get; set; }
         public string contract_number { get; set; }
         public string cutting_day { get; set; }
+        public string cutting_date { get; set; }
     }
 
     public class DatosCredito

@@ -6,7 +6,7 @@ using Workcube.Libraries;
 namespace API.Belvo.Controllers
 {
     [ApiController]
-    [Route("api/Cuentas")]
+    [Route("api/Cuentas/bancarias")]
     public class CuentasController : ControllerBase
     {
         private readonly CuentasService _cuentasService;
@@ -32,13 +32,13 @@ namespace API.Belvo.Controllers
 
                 objReturn.Success(SuccessMessage.REQUEST);
             }
-            catch (AppException e)
+            catch (AppException exception)
             {
-                objReturn.Exception(e);
+                objReturn.Exception(exception);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                objReturn.Exception(ExceptionMessage.RawException(e));
+                objReturn.Exception(ExceptionMessage.RawException(exception));
             }
 
             return objReturn.build();
@@ -52,38 +52,40 @@ namespace API.Belvo.Controllers
             try
             {
                 objReturn.Result = await _cuentasService.DataSource(Globals.JsonData(data));
+
                 objReturn.Success(SuccessMessage.REQUEST);
             }
-            catch (AppException e)
+            catch (AppException exception)
             {
-                objReturn.Exception(e);
+                objReturn.Exception(exception);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                objReturn.Exception(ExceptionMessage.RawException(e));
+                objReturn.Exception(ExceptionMessage.RawException(exception));
             }
 
             return objReturn.build();
         }
 
-        [HttpPost("Create")]
-        public async Task<ActionResult<dynamic>> Create(JsonObject data)
+        [HttpPost("Store")]
+        public async Task<ActionResult<dynamic>> Store(JsonObject data)
         {
             JsonReturn objReturn = new JsonReturn();
 
             try
             {
                 objReturn.Result = await _cuentasService.Create(Globals.JsonData(data));
-                objReturn.Title = "Nueva Cuenta";
-                objReturn.Message = "Se ha creado una nueva cuenta.";
+
+                objReturn.Title = "Nueva cuenta";
+                objReturn.Message = "La nueva cuenta se ha creado exitosamente.";
             }
-            catch (AppException e)
+            catch (AppException exception)
             {
-                objReturn.Exception(e);
+                objReturn.Exception(exception);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                objReturn.Exception(ExceptionMessage.RawException(e));
+                objReturn.Exception(ExceptionMessage.RawException(exception));
             }
 
             return objReturn.build();
@@ -96,9 +98,10 @@ namespace API.Belvo.Controllers
 
             try
             {
-                string id = Globals.ParseGuid(Globals.JsonData(data).idCuenta);  
+                string id = Globals.ParseGuid(Globals.JsonData(data).idCuenta);
                 string fields = "CuentaAgencia,CuentaCategoria,CuentaCreatedFecha,CuentaLastAccessedFecha,CuentaMonedaCodigo,CuentaNombre,CuentaNumero,CuentaSaldoTipo,CuentaTipo,IdCuenta,IdExterno,IdLink,IdProductoBancario," +
                                   "InstitucionCodigo,InstitucionNombre,InstitucionTipo,SaldoActual,SaldoDisponible";
+
                 var objRaw = await _cuentasService.FindSelectorById(id, fields);
                 var objModel = new
                 {
@@ -123,15 +126,16 @@ namespace API.Belvo.Controllers
                 };
 
                 objReturn.Result = objModel;
+
                 objReturn.Success(SuccessMessage.REQUEST);
             }
-            catch (AppException e)
+            catch (AppException exception)
             {
-                objReturn.Exception(e);
+                objReturn.Exception(exception);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                objReturn.Exception(ExceptionMessage.RawException(e));
+                objReturn.Exception(ExceptionMessage.RawException(exception));
             }
 
             return objReturn.build();
@@ -145,16 +149,17 @@ namespace API.Belvo.Controllers
             try
             {
                 objReturn.Result = await _cuentasService.Update(Globals.JsonData(data), User);
-                objReturn.Title = "Cuenta Actualizada";
-                objReturn.Message = "Se ha actualizado la cuenta.";
+
+                objReturn.Title = "Actualizado";
+                objReturn.Message = "La cuenta se ha actualizado exitosamente.";
             }
-            catch (AppException e)
+            catch (AppException exception)
             {
-                objReturn.Exception(e);
+                objReturn.Exception(exception);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                objReturn.Exception(ExceptionMessage.RawException(e));
+                objReturn.Exception(ExceptionMessage.RawException(exception));
             }
 
             return objReturn.build();
@@ -168,16 +173,17 @@ namespace API.Belvo.Controllers
             try
             {
                 objReturn.Result = await _cuentasService.Delete(Globals.JsonData(data), User);
-                objReturn.Title = "Cuenta Eliminada";
-                objReturn.Message = "Se ha eliminado la cuenta.";
+
+                objReturn.Title = "Eliminado";
+                objReturn.Message = "La cuenta se ha eliminado exitosamente.";
             }
-            catch (AppException e)
+            catch (AppException exception)
             {
-                objReturn.Exception(e);
+                objReturn.Exception(exception);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                objReturn.Exception(ExceptionMessage.RawException(e));
+                objReturn.Exception(ExceptionMessage.RawException(exception));
             }
 
             return objReturn.build();
