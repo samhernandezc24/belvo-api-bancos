@@ -17,9 +17,9 @@ namespace API.Belvo.Services
     {
         private readonly Context _context;
         private readonly IMapper _mapper;
-        private readonly CuentasService _linksService;
+        private readonly LinksService _linksService;
 
-        public CuentasService(Context context, IMapper mapper, CuentasService linksService) 
+        public CuentasService(Context context, IMapper mapper, LinksService linksService) 
         {
             _context = context; 
             _mapper = mapper;
@@ -93,8 +93,7 @@ namespace API.Belvo.Services
             objModel.FondosCollectedFecha               = data.funds_data?.collected_at ?? null;
             objModel.FondosNombre                       = data.funds_data.name;
             objModel.FondosTipo                         = data.funds_data.type;
-            objModel.FondosIdentificacionPublicaNombre  = data.funds_data.public_identifications.name;
-            objModel.FondosIdentificacionPublicaValor   = data.funds_data.public_identifications.value;
+            objModel.FondosIdentificacionPublicaJson  = JsonConvert.SerializeObject(data.funds_data.public_identifications);
             objModel.FondosSaldo                        = data.funds_data?.balance ?? 0;
             objModel.FondosPorcentaje                   = data.funds_data?.percentage ?? 0;
             objModel.CuentasPorCobrarValorActual        = data.receivables_data?.current ?? 0;
@@ -105,6 +104,8 @@ namespace API.Belvo.Services
             objModel.CuentaIdentificacionInterna        = data.internal_identification;
 
             _context.Cuentas.Add(objModel);
+
+            var lst = new List<dynamic>();
 
             var objLink = await BelvoService.LinksDetails(objModel.IdLink);
 

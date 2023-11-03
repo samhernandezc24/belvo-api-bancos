@@ -100,8 +100,7 @@ namespace API.Belvo.Models
         public string FondosTipo { get; set; }
 
         // DatosFondo [FundsData] -> IdentificacionPublica [PublicIdentifications]
-        public string FondosIdentificacionPublicaNombre { get; set; }
-        public string FondosIdentificacionPublicaValor { get; set; }
+        public string FondosIdentificacionPublicaJson { get; set; }
 
         [Column(TypeName = "decimal(30, 2)")]
         public decimal? FondosSaldo { get; set; }

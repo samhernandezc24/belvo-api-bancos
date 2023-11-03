@@ -23,6 +23,8 @@ builder.Services.AddDbContext<Context>(options => options.UseSqlServer(connectio
 // Registra servicios en el contenedor de inyección de dependencias.
 builder.Services.AddScoped<BelvoService, BelvoService>();
 builder.Services.AddScoped<CuentasService, CuentasService>();
+builder.Services.AddScoped<LinksService, LinksService>();
+builder.Services.AddScoped<TransaccionesService, TransaccionesService>();
 
 // Configura AutoMapper.
 builder.Services.AddAutoMapper(typeof(Program));

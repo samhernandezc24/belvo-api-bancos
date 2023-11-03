@@ -22,6 +22,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="RestSharp" Version="110.2.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Workcube.CatalogosSAT.SDK" Version="1.0.28" />
     <PackageReference Include="Workcube.Dependencias" Version="1.0.51" />
   </ItemGroup>
 
