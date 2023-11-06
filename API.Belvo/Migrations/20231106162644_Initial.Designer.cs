@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Belvo.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20231105012344_migration1")]
-    partial class migration1
+    [Migration("20231106162644_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -213,23 +213,8 @@ namespace API.Belvo.Migrations
                     b.Property<string>("PrestamoTarifaJson")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PrestamoTarifaTipo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("PrestamoTarifaValor")
-                        .HasColumnType("decimal(30, 2)");
-
                     b.Property<string>("PrestamoTasaInteresJson")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PrestamoTasaInteresNombre")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PrestamoTasaInteresTipo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("PrestamoTasaInteresValor")
-                        .HasColumnType("decimal(30, 2)");
 
                     b.Property<string>("PrestamoTipo")
                         .HasColumnType("nvarchar(max)");

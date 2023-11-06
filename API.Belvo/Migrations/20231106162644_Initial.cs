@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace API.Belvo.Migrations
 {
     /// <inheritdoc />
-    public partial class migration1 : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -54,12 +54,7 @@ namespace API.Belvo.Migrations
                     PrestamoSaldoPendientePago = table.Column<decimal>(type: "decimal(30,2)", nullable: true),
                     PrestamoPagoMensual = table.Column<decimal>(type: "decimal(30,2)", nullable: true),
                     PrestamoTasaInteresJson = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PrestamoTasaInteresNombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PrestamoTasaInteresTipo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PrestamoTasaInteresValor = table.Column<decimal>(type: "decimal(30,2)", nullable: true),
                     PrestamoTarifaJson = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PrestamoTarifaTipo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PrestamoTarifaValor = table.Column<decimal>(type: "decimal(30,2)", nullable: false),
                     PrestamoNumeroPlazosTotal = table.Column<int>(type: "int", nullable: true),
                     PrestamoNumeroPlazosPendientes = table.Column<int>(type: "int", nullable: true),
                     PrestamoContractStartFecha = table.Column<string>(type: "nvarchar(max)", nullable: true),

@@ -8,7 +8,6 @@
         // Institucion [Institution]
         public string InstitucionNombre { get; set; }
         public string InstitucionTipo { get; set; }
-        public string InstitucionCodigo { get; set; }
 
         public DateTime CuentaCollectedFecha { get; set; }
         public DateTime CuentaCreatedFecha { get; set; }

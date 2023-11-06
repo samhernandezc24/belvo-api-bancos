@@ -72,16 +72,9 @@ namespace API.Belvo.Models
 
         // DatosPrestamo [LoanData] -> TasaInteres [InterestRates]
         public string PrestamoTasaInteresJson { get; set; }
-        public string PrestamoTasaInteresNombre { get; set; }
-        public string PrestamoTasaInteresTipo { get; set; }
-        [Column(TypeName = "decimal(30, 2)")]
-        public decimal? PrestamoTasaInteresValor { get; set; }
 
         // DatosPrestamo [LoanData] -> Tarifa [Fees]
         public string PrestamoTarifaJson { get; set; }
-        public string PrestamoTarifaTipo { get; set; }
-        [Column(TypeName = "decimal(30, 2)")]
-        public decimal PrestamoTarifaValor { get; set; }
 
         public int? PrestamoNumeroPlazosTotal { get; set; }
         public int? PrestamoNumeroPlazosPendientes { get; set; }

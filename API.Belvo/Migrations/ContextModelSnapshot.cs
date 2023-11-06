@@ -210,23 +210,8 @@ namespace API.Belvo.Migrations
                     b.Property<string>("PrestamoTarifaJson")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PrestamoTarifaTipo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("PrestamoTarifaValor")
-                        .HasColumnType("decimal(30, 2)");
-
                     b.Property<string>("PrestamoTasaInteresJson")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PrestamoTasaInteresNombre")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PrestamoTasaInteresTipo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("PrestamoTasaInteresValor")
-                        .HasColumnType("decimal(30, 2)");
 
                     b.Property<string>("PrestamoTipo")
                         .HasColumnType("nvarchar(max)");

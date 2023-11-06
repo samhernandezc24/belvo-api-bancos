@@ -35,21 +35,21 @@ namespace API.Belvo.Services
         {
             var objTransaction = _context.Database.BeginTransaction();
 
-            Link objModel                       = new Link();
+            Link objModel = new Link();
             objModel.IdLink                     = Guid.NewGuid().ToString();
-            objModel.Institucion                = data.institution;
             objModel.ModoAcceso                 = data.access_mode;
-            objModel.LinkEstatusName            = data.status;
-            objModel.TasaActualizacion          = data.refresh_rate;
-            objModel.CreadoPor                  = data.created_by;
-            objModel.LastAccessedFecha          = data.last_accessed_at;
-            objModel.IdExterno                  = data.external_id;
             objModel.LinkCreatedFecha           = data.created_at;
-            objModel.IdInstitucionUser          = data.institution_user_id;
+            objModel.CreadoPor                  = data.created_by;
             objModel.AlmacenamientoCredenciales = data.credentials_storage;
-            objModel.Vencimiento                = data.stale_in;
+            objModel.IdExterno                  = data.external_id;
             objModel.IsFetchHistorical          = data.fetch_historical;
             objModel.BuscarRecursos             = JsonConvert.SerializeObject(data.fetch_resources);
+            objModel.Institucion                = data.institution;
+            objModel.IdInstitucionUser          = data.institution_user_id;
+            objModel.LastAccessedFecha          = data.last_accessed_at;            
+            objModel.TasaActualizacion          = data.refresh_rate;
+            objModel.Vencimiento                = data.stale_in;
+            objModel.LinkEstatusName            = data.status;
 
             _context.Links.Add(objModel);
             await _context.SaveChangesAsync();
@@ -179,9 +179,8 @@ namespace API.Belvo.Services
         {
             var objTransaction = _context.Database.BeginTransaction();
             string idLink = Globals.ParseGuid(data.idLink);
-            Link objModel = await Find(idLink);
+            Link objModel = await Find(idLink) ?? throw new ArgumentException("No se ha podido encontrar el link especificado.");
 
-            if (objModel == null) { throw new ArgumentException("No se ha podido encontrar el link especificado."); }
             if (objModel.Deleted) { throw new ArgumentException("Este link ya había sido eliminado anteriormente.");  }
 
             objModel.Deleted = true;
@@ -223,23 +222,22 @@ namespace API.Belvo.Services
         {
             var objTransaction = _context.Database.BeginTransaction();
             string idLink = Globals.ParseGuid(data.idLink);
-            Link objModel = await Find(idLink);
+            Link objModel = await Find(idLink) ?? throw new ArgumentException("No se ha podido encontrar el link especificado.");
 
-            if (objModel == null) { throw new ArgumentException("No se ha podido encontrar el link especificado."); }
-
-            objModel.Institucion                = data.institution;
             objModel.ModoAcceso                 = data.access_mode;
-            objModel.LinkEstatusName            = data.status;
-            objModel.TasaActualizacion          = data.refresh_rate;
-            objModel.CreadoPor                  = data.created_by;
-            objModel.LastAccessedFecha          = data.last_accessed_at;
-            objModel.IdExterno                  = data.external_id;
             objModel.LinkCreatedFecha           = data.created_at;
-            objModel.IdInstitucionUser          = data.institution_user_id;
+            objModel.CreadoPor                  = data.created_by;
             objModel.AlmacenamientoCredenciales = data.credentials_storage;
-            objModel.Vencimiento                = data.stale_in;
+            objModel.IdExterno                  = data.external_id;
             objModel.IsFetchHistorical          = data.fetch_historical;
             objModel.BuscarRecursos             = JsonConvert.SerializeObject(data.fetch_resources);
+            objModel.Institucion                = data.institution;
+            objModel.IdInstitucionUser          = data.institution_user_id;
+            objModel.LastAccessedFecha          = data.last_accessed_at;
+            objModel.TasaActualizacion          = data.refresh_rate;
+            objModel.Vencimiento                = data.stale_in;
+            objModel.LinkEstatusName            = data.status;
+            objModel.SetUpdated(Globals.GetUser(user));
 
             _context.Links.Update(objModel);
             await _context.SaveChangesAsync();
