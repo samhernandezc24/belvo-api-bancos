@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Belvo.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20231103230531_migration2")]
-    partial class migration2
+    [Migration("20231105012344_migration1")]
+    partial class migration1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

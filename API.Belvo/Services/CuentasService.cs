@@ -37,35 +37,39 @@ namespace API.Belvo.Services
 
             Cuenta objModel = new Cuenta();
             objModel.IdCuenta                           = Guid.NewGuid().ToString();
+            objModel.CuentaAgencia                      = data.agency;
+            objModel.SaldoActual                        = data.balance?.current ?? 0;
+            objModel.SaldoDisponible                    = data.balance?.available ?? 0;
+            objModel.CuentaSaldoTipo                    = data.balance_type;
+            objModel.IdProductoBancario                 = data.bank_product_id;
+            objModel.CuentaCategoria                    = data.category;
+            objModel.CuentaCollectedFecha               = data.collected_at;
+            objModel.CuentaCreatedFecha                 = data.created_at;
+            objModel.CreditoCollectedFecha              = data.credit_data?.collected_at ?? null;
+            objModel.CreditoLimite                      = data.credit_data?.credit_limit ?? 0;            
+            objModel.CreditoCuttingFecha                = data.credit_data.cutting_date;
+            objModel.CreditoTasaInteres                 = data.credit_data?.interest_rate ?? 0;
+            objModel.CreditoLastPaymentFecha            = data.credit_data?.last_payment_date ?? "";
+            objModel.CreditoUltimoPeriodoSaldo          = data.credit_data?.last_period_balance ?? 0;
+            objModel.CreditoPagoMinimo                  = data.credit_data?.minimum_payment ?? 0;
+            objModel.CreditoPagoMensual                 = data.credit_data?.monthly_payment ?? 0;
+            objModel.CreditoNextPaymentFecha            = data.credit_data?.next_payment_date ?? "";            
+            objModel.CreditoSinPagoIntereses            = data.credit_data?.no_interest_payment ?? 0;
+            objModel.CuentaMonedaCodigo                 = data.currency;
+
             objModel.IdExterno                          = data.external_id;
             objModel.IdLink                             = data.link;
             objModel.InstitucionNombre                  = data.institution?.name ?? "";
             objModel.InstitucionTipo                    = data.institution?.type ?? "";
-            objModel.InstitucionCodigo                  = data.institution_code;
-            objModel.CuentaCollectedFecha               = data.collected_at;
-            objModel.CuentaCreatedFecha                 = data.created_at;
-            objModel.CuentaCategoria                    = data.category;
-            objModel.CuentaSaldoTipo                    = data.balance_type;
+            objModel.InstitucionCodigo                  = data.institution_code;                                  
             objModel.CuentaTipo                         = data.type;
-            objModel.CuentaNombre                       = data.name;
-            objModel.CuentaAgencia                      = data.agency;
-            objModel.CuentaNumero                       = data.number;
-            objModel.SaldoActual                        = data.balance?.current ?? 0;
-            objModel.SaldoDisponible                    = data.balance?.available ?? 0;
-            objModel.CuentaMonedaCodigo                 = data.currency;
+            objModel.CuentaNombre                       = data.name;            
+            objModel.CuentaNumero                       = data.number;            
+            
             objModel.CuentaIdentificacionPublicaNombre  = data.public_identification_name;
             objModel.CuentaIdentificacionPublicaValor   = data.public_identification_value;
-            objModel.CuentaLastAccessedFecha            = data.last_accessed_at ?? null;
-            objModel.CreditoLimite                      = data.credit_data?.credit_limit ?? 0;
-            objModel.CreditoCollectedFecha              = data.credit_data?.collected_at ?? null;
-            objModel.CreditoCuttingFecha                = data.credit_data.cutting_date;
-            objModel.CreditoNextPaymentFecha            = data.credit_data.next_payment_date;
-            objModel.CreditoPagoMinimo                  = data.credit_data?.minimum_payment ?? 0;
-            objModel.CreditoSinPagoIntereses            = data.credit_data?.no_interest_payment ?? 0;
-            objModel.CreditoTasaInteres                 = data.credit_data?.interest_rate ?? 0;
-            objModel.CreditoPagoMensual                 = data.credit_data?.monthly_payment ?? 0;
-            objModel.CreditoLastPaymentFecha            = data.credit_data?.last_payment_date ?? "";
-            objModel.CreditoUltimoPeriodoSaldo          = data.credit_data?.last_period_balance ?? 0;
+            objModel.CuentaLastAccessedFecha            = data.last_accessed_at ?? null;            
+            
             objModel.PrestamoCollectedFecha             = data.loan_data?.collected_at ?? null;
             objModel.PrestamoImporteContrato            = data.loan_data?.contract_amount ?? 0;
             objModel.PrestamoPrincipal                  = data.loan_data?.principal ?? 0;
@@ -93,14 +97,13 @@ namespace API.Belvo.Services
             objModel.FondosCollectedFecha               = data.funds_data?.collected_at ?? null;
             objModel.FondosNombre                       = data.funds_data.name;
             objModel.FondosTipo                         = data.funds_data.type;
-            objModel.FondosIdentificacionPublicaJson  = JsonConvert.SerializeObject(data.funds_data.public_identifications);
+            objModel.FondosIdentificacionPublicaJson    = JsonConvert.SerializeObject(data.funds_data.public_identifications);
             objModel.FondosSaldo                        = data.funds_data?.balance ?? 0;
             objModel.FondosPorcentaje                   = data.funds_data?.percentage ?? 0;
             objModel.CuentasPorCobrarValorActual        = data.receivables_data?.current ?? 0;
             objModel.CuentasPorCobrarValorDisponible    = data.receivables_data?.available ?? 0;
             objModel.CuentasPorCobrarValorAnticipado    = data.receivables_data?.anticipated ?? 0;
-            objModel.CuentasPorCobrarCollectedFecha     = data.receivables_data?.collected_at ?? null;
-            objModel.IdProductoBancario                 = data.bank_product_id;
+            objModel.CuentasPorCobrarCollectedFecha     = data.receivables_data?.collected_at ?? null;            
             objModel.CuentaIdentificacionInterna        = data.internal_identification;
 
             _context.Cuentas.Add(objModel);

@@ -100,29 +100,29 @@ namespace API.Belvo.Controllers
             {
                 string id = Globals.ParseGuid(Globals.JsonData(data).idCuenta);
                 string fields = "CuentaAgencia,CuentaCategoria,CuentaCreatedFecha,CuentaLastAccessedFecha,CuentaMonedaCodigo,CuentaNombre,CuentaNumero,CuentaSaldoTipo,CuentaTipo,IdCuenta,IdExterno,IdLink,IdProductoBancario," +
-                                  "InstitucionCodigo,InstitucionNombre,InstitucionTipo,SaldoActual,SaldoDisponible";
+                                "InstitucionCodigo,InstitucionNombre,InstitucionTipo,SaldoActual,SaldoDisponible";
 
                 var objRaw = await _cuentasService.FindSelectorById(id, fields);
                 var objModel = new
                 {
-                    CuentaAgencia = objRaw.CuentaAgencia,
-                    CuentaCategoria = objRaw.CuentaCategoria,
-                    CuentaCreatedFecha = objRaw.CuentaCreatedFecha,
+                    CuentaAgencia           = objRaw.CuentaAgencia,
+                    CuentaCategoria         = objRaw.CuentaCategoria,
+                    CuentaCreatedFecha      = objRaw.CuentaCreatedFecha,
                     CuentaLastAccessedFecha = objRaw.CuentaLastAccessedFecha,
-                    CuentaMonedaCodigo = objRaw.CuentaMonedaCodigo,
-                    CuentaNombre = objRaw.CuentaNombre,
-                    CuentaNumero = objRaw.CuentaNumero,
-                    CuentaSaldoTipo = objRaw.CuentaSaldoTipo,
-                    CuentaTipo = objRaw.CuentaTipo,
-                    IdCuenta = objRaw.IdCuenta,
-                    IdExterno = objRaw.IdExterno,
-                    IdLink = objRaw.IdLink,
-                    IdProductoBancario = objRaw.IdProductoBancario,
-                    InstitucionCodigo = objRaw.InstitucionCodigo,
-                    InstitucionNombre = objRaw.InstitucionNombre,
-                    InstitucionTipo = objRaw.InstitucionTipo,
-                    SaldoActual = objRaw.SaldoActual,
-                    SaldoDisponible = objRaw.SaldoDisponible,
+                    CuentaMonedaCodigo      = objRaw.CuentaMonedaCodigo,
+                    CuentaNombre            = objRaw.CuentaNombre,
+                    CuentaNumero            = objRaw.CuentaNumero,
+                    CuentaSaldoTipo         = objRaw.CuentaSaldoTipo,
+                    CuentaTipo              = objRaw.CuentaTipo,
+                    IdCuenta                = objRaw.IdCuenta,
+                    IdExterno               = objRaw.IdExterno,
+                    IdLink                  = objRaw.IdLink,
+                    IdProductoBancario      = objRaw.IdProductoBancario,
+                    InstitucionCodigo       = objRaw.InstitucionCodigo,
+                    InstitucionNombre       = objRaw.InstitucionNombre,
+                    InstitucionTipo         = objRaw.InstitucionTipo,
+                    SaldoActual             = objRaw.SaldoActual,
+                    SaldoDisponible         = objRaw.SaldoDisponible,
                 };
 
                 objReturn.Result = objModel;
