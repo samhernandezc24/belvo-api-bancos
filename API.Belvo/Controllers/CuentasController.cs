@@ -6,7 +6,7 @@ using Workcube.Libraries;
 namespace API.Belvo.Controllers
 {
     [ApiController]
-    [Route("api/Cuentas/bancarias")]
+    [Route("api/Cuentas/Bancarias")]
     public class CuentasController : ControllerBase
     {
         private readonly CuentasService _cuentasService;
