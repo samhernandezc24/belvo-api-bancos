@@ -70,6 +70,8 @@
         public string contract_number { get; set; }
         public string cutting_day { get; set; }
         public string cutting_date { get; set; }
+        public string last_payment_date { get; set; }
+        public decimal? no_interest_payment { get; set; }
     }
 
     public class DatosCredito

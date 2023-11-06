@@ -9,7 +9,7 @@
         public string TasaActualizacion { get; set; }
         public string CreadoPor { get; set; }
         public DateTime LastAccessedFecha { get; set; }
-        public string IdExterno { get; set; }
+        public string IdExternalBelvo { get; set; }
         public DateTime LinkCreatedFecha { get; set; }
         public string IdInstitucionUser { get; set; }
         public string AlmacenamientoCredenciales { get; set; }

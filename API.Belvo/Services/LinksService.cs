@@ -40,10 +40,11 @@ namespace API.Belvo.Services
             objModel.ModoAcceso                 = data.access_mode;
             objModel.LinkCreatedFecha           = data.created_at;
             objModel.CreadoPor                  = data.created_by;
-            objModel.AlmacenamientoCredenciales = data.credentials_storage;
-            objModel.IdExterno                  = data.external_id;
+            objModel.AlmacenamientoCredenciales = data.credentials_storage;            
+            objModel.IdExternalBelvo            = data.external_id;
             objModel.IsFetchHistorical          = data.fetch_historical;
             objModel.BuscarRecursos             = JsonConvert.SerializeObject(data.fetch_resources);
+            objModel.IdExterno                  = data.id;
             objModel.Institucion                = data.institution;
             objModel.IdInstitucionUser          = data.institution_user_id;
             objModel.LastAccessedFecha          = data.last_accessed_at;            
@@ -78,7 +79,7 @@ namespace API.Belvo.Services
                     AlmacenamientoCredenciales  = x.AlmacenamientoCredenciales,
                     BuscarRecursos              = x.BuscarRecursos,
                     CreadoPor                   = x.CreadoPor,
-                    IdExterno                   = x.IdExterno,
+                    IdExternalBelvo             = x.IdExternalBelvo,
                     IdInstitucionUser           = x.IdInstitucionUser,
                     Institucion                 = x.Institucion,
                     IsFechtHistorial            = x.IsFetchHistorical,

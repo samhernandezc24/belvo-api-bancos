@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace API.Belvo.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class migration1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -94,13 +94,14 @@ namespace API.Belvo.Migrations
                 columns: table => new
                 {
                     IdLink = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    IdExterno = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Institucion = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ModoAcceso = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LinkEstatusName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TasaActualizacion = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreadoPor = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastAccessedFecha = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IdExterno = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IdExternalBelvo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LinkCreatedFecha = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IdInstitucionUser = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AlmacenamientoCredenciales = table.Column<string>(type: "nvarchar(max)", nullable: true),

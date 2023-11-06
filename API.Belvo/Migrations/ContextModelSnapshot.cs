@@ -259,6 +259,9 @@ namespace API.Belvo.Migrations
                     b.Property<string>("IdCreatedUser")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("IdExternalBelvo")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("IdExterno")
                         .HasColumnType("nvarchar(max)");
 

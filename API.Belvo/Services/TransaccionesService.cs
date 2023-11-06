@@ -47,7 +47,7 @@ namespace API.Belvo.Services
             objModel.TarjetaCreditoCollectedFecha       = data.credit_card_data.collected_at;
             objModel.MonedaCodigo                       = data.currency;
             objModel.Descripcion                        = data.description;    
-            objModel.IdExterno                          = data.external_id;
+            objModel.IdExterno                          = data.id;
             objModel.IdentificacionInterna              = data.internal_identification;
             objModel.ComercianteNombre                  = data.merchant.merchant_name;
             objModel.Observaciones                      = data.observations;

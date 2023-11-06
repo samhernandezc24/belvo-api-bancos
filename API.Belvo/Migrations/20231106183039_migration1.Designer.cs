@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Belvo.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20231106162644_Initial")]
-    partial class Initial
+    [Migration("20231106183039_migration1")]
+    partial class migration1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -260,6 +260,9 @@ namespace API.Belvo.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("IdCreatedUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IdExternalBelvo")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IdExterno")
