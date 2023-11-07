@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Belvo.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20231106183039_migration1")]
+    [Migration("20231107054143_migration1")]
     partial class migration1
     {
         /// <inheritdoc />
