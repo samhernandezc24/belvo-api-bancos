@@ -67,6 +67,34 @@ namespace API.Belvo.Controllers
             return objReturn.build();
         }
 
+        [HttpPost("Create")]
+        public async Task<ActionResult<dynamic>> Create()
+        {
+            JsonReturn objReturn = new JsonReturn();
+
+            try
+            {
+                var lstInstituciones = await BelvoService.InstitutionsList();
+
+                objReturn.Result = new
+                {
+                    instituciones = lstInstituciones,
+                };
+
+                objReturn.Success(SuccessMessage.REQUEST);
+            }
+            catch (AppException exception)
+            {
+                objReturn.Exception(exception);
+            }
+            catch (Exception exception)
+            {
+                objReturn.Exception(ExceptionMessage.RawException(exception));
+            }
+
+            return objReturn.build();
+        }
+
         [HttpPost("Store")]
         public async Task<ActionResult<dynamic>> Store(JsonObject data)
         {

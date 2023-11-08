@@ -1,5 +1,7 @@
 ﻿using API.Belvo.Libraries;
 using API.Belvo.Persistence;
+using API.Belvo.ViewModels;
+using Newtonsoft.Json;
 
 namespace API.Belvo.Services
 {
@@ -48,12 +50,17 @@ namespace API.Belvo.Services
         | Se recupera "Cuentas" de un "Link" existente.
         |
         */
-        public static async Task<dynamic> AccountsRetrieveByLink(dynamic objBodyParams)
+        public static async Task<CuentaListResult> AccountsRetrieveByLink(dynamic objBodyParams)
         {
             try
             {
                 var result = await WebServiceManager.Post(belvoApiUrl + "api/accounts", lstHeaders, objBodyParams);
-                return result;
+
+                if (!result.isSuccessful) { throw new ArgumentException(result.statusCode + " - No se pudo obtener la cuenta"); }
+
+                CuentaListResult accountData = JsonConvert.DeserializeObject<CuentaListResult>(result.content);
+
+                return accountData;
             }
             catch (Exception e)
             {
@@ -144,7 +151,12 @@ namespace API.Belvo.Services
             try
             {
                 var result = await WebServiceManager.Get(belvoApiUrl + "api/institutions", lstHeaders);
-                return result;
+                
+                if (!result.isSuccessful) { throw new ArgumentException(result.statusCode + " - No se logo obtener las lista de instituciones"); }
+
+                BelvoInstitucionViewModel objResult = JsonConvert.DeserializeObject<BelvoInstitucionViewModel>(result.content);
+
+                return objResult.results.Where(x => x.type == "bank").ToList();
             }
             catch (Exception e)
             {
@@ -206,12 +218,18 @@ namespace API.Belvo.Services
         | Se registra un nuevo "Link" con la cuenta de Belvo.
         |
         */
-        public static async Task<dynamic> LinksCreate(dynamic objBodyParams)
+        public static async Task<LinkListResult> LinksCreate(dynamic objBodyParams)
         {
             try
             {
+
                 var result = await WebServiceManager.Post(belvoApiUrl + "api/links", lstHeaders, objBodyParams);
-                return result;
+
+                if (!result.isSuccessful) { throw new ArgumentException(result.statusCode + " - No se pudo guardar el link"); }
+
+                LinkListResult linkData = JsonConvert.DeserializeObject<LinkListResult>(result.content);
+
+                return linkData;
             }
             catch (Exception e)
             {

@@ -33,20 +33,31 @@ namespace API.Belvo.Services
 
         public async Task Create(dynamic data)
         {
+            var objTransaction = _context.Database.BeginTransaction();
+
             var parameters = new
             {
-                link = Globals.ParseGuid(data.idLink),
-                token = "wfjkbwefjwefewfwef",
-                isSave = true,
+                institution         = Globals.ToString(data.institucionName),
+                username            = Globals.ToString(data.userName),
+                password            = Globals.ToString(data.password),
+                access_mode         = "recurrent",
+                fetch_resources     = new List<string>() { "ACCOUNTS","BALANCES","INCOMES","OWNERS","TRANSACTIONS" },
+                credentials_storage = "store",
+                stale_in            = "365d",
             };
 
-            var result = await BelvoService.AccountsRetrieveByLink(parameters);
+            var objLinksData = await BelvoService.LinksCreate(parameters);
+            await _linksService.Create(objLinksData);
 
-            if (!result.isSuccessful) { throw new ArgumentException(result.statusCode + " - No se pudo guardar la cuenta"); }
+            // Retrieve accounts for a link
+            var linkParameters = new
+            {
+                link        = Globals.ParseGuid(objLinksData.id),
+                token       = "1234ab",
+                save_data   = true,
+            };
 
-            CuentaListResult accountData = JsonConvert.DeserializeObject<CuentaListResult>(result.content);
-
-            var objTransaction = _context.Database.BeginTransaction();
+            var accountData = await BelvoService.AccountsRetrieveByLink(linkParameters);            
 
             Cuenta objModel = new Cuenta();
             objModel.IdCuenta                           = Guid.NewGuid().ToString();
@@ -111,11 +122,7 @@ namespace API.Belvo.Services
             objModel.CuentasPorCobrarValorActual        = accountData.receivables_data?.current ?? 0;          
             objModel.CuentaTipo                         = accountData.type;
                        
-            _context.Cuentas.Add(objModel);
-
-            var objLink = await BelvoService.LinksDetails(objModel.IdLink);
-
-            await _linksService.Create(objLink);
+            _context.Cuentas.Add(objModel);            
             await _context.SaveChangesAsync();
             objTransaction.Commit();
         }

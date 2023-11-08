@@ -6,5 +6,6 @@ namespace API.Belvo.Controllers
     [Route("api/Belvo")]
     public class BelvoCuentasController
     {
+
     }
 }

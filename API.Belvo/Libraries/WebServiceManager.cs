@@ -1,4 +1,6 @@
-﻿using RestSharp;
+﻿using Newtonsoft.Json;
+using RestSharp;
+using Workcube.Libraries;
 
 namespace API.Belvo.Libraries
 {
@@ -55,10 +57,12 @@ namespace API.Belvo.Libraries
 
                 if (objParameter != null)
                 {
-                    request.AddJsonBody((string)objParameter);
+                    string jsonParameter = JsonConvert.SerializeObject(objParameter);
+                    request.AddJsonBody(jsonParameter, false, ContentType.Json);
                 }
 
                 var response = await client.ExecuteAsync(request);
+                
                 var result = new
                 {
                     content         =   response.Content,
