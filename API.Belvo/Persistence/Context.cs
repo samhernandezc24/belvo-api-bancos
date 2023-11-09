@@ -5,12 +5,9 @@ namespace API.Belvo.Persistence
 {
     public class Context : DbContext
     {
-        public Context(DbContextOptions<Context> options) : base(options) {}
+        public Context(DbContextOptions<Context> options) : base(options) { }
 
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder) => base.OnModelCreating(modelBuilder);
 
         // C
         public virtual DbSet<Cuenta> Cuentas { get; set; }

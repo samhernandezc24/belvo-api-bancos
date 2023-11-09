@@ -103,7 +103,6 @@ namespace API.Belvo.Controllers
             try
             {
                 objReturn.Result = await _cuentasService.Create(Globals.JsonData(data));
-
                 objReturn.Title = "Nueva cuenta";
                 objReturn.Message = "La nueva cuenta se ha creado exitosamente.";
             }
@@ -133,24 +132,24 @@ namespace API.Belvo.Controllers
                 var objRaw = await _cuentasService.FindSelectorById(id, fields);
                 var objModel = new
                 {
-                    CuentaAgencia           = objRaw.CuentaAgencia,
-                    CuentaCategoria         = objRaw.CuentaCategoria,
-                    CuentaCreatedFecha      = objRaw.CuentaCreatedFecha,
+                    CuentaAgencia = objRaw.CuentaAgencia,
+                    CuentaCategoria = objRaw.CuentaCategoria,
+                    CuentaCreatedFecha = objRaw.CuentaCreatedFecha,
                     CuentaLastAccessedFecha = objRaw.CuentaLastAccessedFecha,
-                    CuentaMonedaCodigo      = objRaw.CuentaMonedaCodigo,
-                    CuentaNombre            = objRaw.CuentaNombre,
-                    CuentaNumero            = objRaw.CuentaNumero,
-                    CuentaSaldoTipo         = objRaw.CuentaSaldoTipo,
-                    CuentaTipo              = objRaw.CuentaTipo,
-                    IdCuenta                = objRaw.IdCuenta,
-                    IdExterno               = objRaw.IdExterno,
-                    IdLink                  = objRaw.IdLink,
-                    IdProductoBancario      = objRaw.IdProductoBancario,
-                    InstitucionCodigo       = objRaw.InstitucionCodigo,
-                    InstitucionNombre       = objRaw.InstitucionNombre,
-                    InstitucionTipo         = objRaw.InstitucionTipo,
-                    SaldoActual             = objRaw.SaldoActual,
-                    SaldoDisponible         = objRaw.SaldoDisponible,
+                    CuentaMonedaCodigo = objRaw.CuentaMonedaCodigo,
+                    CuentaNombre = objRaw.CuentaNombre,
+                    CuentaNumero = objRaw.CuentaNumero,
+                    CuentaSaldoTipo = objRaw.CuentaSaldoTipo,
+                    CuentaTipo = objRaw.CuentaTipo,
+                    IdCuenta = objRaw.IdCuenta,
+                    IdExterno = objRaw.IdExterno,
+                    IdLink = objRaw.IdLink,
+                    IdProductoBancario = objRaw.IdProductoBancario,
+                    InstitucionCodigo = objRaw.InstitucionCodigo,
+                    InstitucionNombre = objRaw.InstitucionNombre,
+                    InstitucionTipo = objRaw.InstitucionTipo,
+                    SaldoActual = objRaw.SaldoActual,
+                    SaldoDisponible = objRaw.SaldoDisponible,
                 };
 
                 objReturn.Result = objModel;

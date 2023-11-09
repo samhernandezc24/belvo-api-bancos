@@ -13,7 +13,7 @@ using Workcube.ViewModels;
 
 namespace API.Belvo.Services
 {
-    public class CuentasService : IGlobal<Cuenta>
+    internal sealed class CuentasService : IGlobal<Cuenta>
     {
         private readonly Context _context;
         private readonly IMapper _mapper;
@@ -50,14 +50,21 @@ namespace API.Belvo.Services
             await _linksService.Create(objLinksData);
 
             // Retrieve accounts for a link
-            var linkParameters = new
+            var linksParameters = new
             {
                 link        = Globals.ParseGuid(objLinksData.id),
                 token       = "1234ab",
                 save_data   = true,
-            };
+            };            
 
-            var accountData = await BelvoService.AccountsRetrieveByLink(linkParameters);            
+            var accountData = await BelvoService.AccountsRetrieveByLink(linksParameters);
+
+            string[] lstRows = { "3", "2", "1" };
+
+            foreach (var item in lstRows)
+            {
+               // comentario de implementacion del modelo
+            }
 
             Cuenta objModel = new Cuenta();
             objModel.IdCuenta                           = Guid.NewGuid().ToString();

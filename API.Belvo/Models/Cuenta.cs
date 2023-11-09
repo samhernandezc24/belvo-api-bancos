@@ -9,7 +9,8 @@ namespace API.Belvo.Models
     {
         [Key]
         public string IdCuenta { get; set; }
-        public string IdExterno { get; set; }
+
+        //public virtual Link Link { get; set; }
         public string IdLink { get; set; }
 
         // Institucion [Institution]
