@@ -11,10 +11,10 @@ namespace API.Belvo.Controllers
     {
         private readonly CuentasService _cuentasService;
 
-        public CuentasController(CuentasService cuentasService)
-        {
-            _cuentasService = cuentasService;
-        }
+        //public CuentasController(CuentasService cuentasService)
+        //{
+        //    _cuentasService = cuentasService;
+        //}
 
         [HttpPost("Index")]
         public async Task<ActionResult<dynamic>> Index()
@@ -132,24 +132,24 @@ namespace API.Belvo.Controllers
                 var objRaw = await _cuentasService.FindSelectorById(id, fields);
                 var objModel = new
                 {
-                    CuentaAgencia = objRaw.CuentaAgencia,
-                    CuentaCategoria = objRaw.CuentaCategoria,
-                    CuentaCreatedFecha = objRaw.CuentaCreatedFecha,
-                    CuentaLastAccessedFecha = objRaw.CuentaLastAccessedFecha,
-                    CuentaMonedaCodigo = objRaw.CuentaMonedaCodigo,
-                    CuentaNombre = objRaw.CuentaNombre,
-                    CuentaNumero = objRaw.CuentaNumero,
-                    CuentaSaldoTipo = objRaw.CuentaSaldoTipo,
-                    CuentaTipo = objRaw.CuentaTipo,
-                    IdCuenta = objRaw.IdCuenta,
-                    IdExterno = objRaw.IdExterno,
-                    IdLink = objRaw.IdLink,
-                    IdProductoBancario = objRaw.IdProductoBancario,
-                    InstitucionCodigo = objRaw.InstitucionCodigo,
-                    InstitucionNombre = objRaw.InstitucionNombre,
-                    InstitucionTipo = objRaw.InstitucionTipo,
-                    SaldoActual = objRaw.SaldoActual,
-                    SaldoDisponible = objRaw.SaldoDisponible,
+                    //CuentaAgencia = objRaw.CuentaAgencia,
+                    //CuentaCategoria = objRaw.CuentaCategoria,
+                    //CuentaCreatedFecha = objRaw.CuentaCreatedFecha,
+                    //CuentaLastAccessedFecha = objRaw.CuentaLastAccessedFecha,
+                    //CuentaMonedaCodigo = objRaw.CuentaMonedaCodigo,
+                    //CuentaNombre = objRaw.CuentaNombre,
+                    //CuentaNumero = objRaw.CuentaNumero,
+                    //CuentaSaldoTipo = objRaw.CuentaSaldoTipo,
+                    //CuentaTipo = objRaw.CuentaTipo,
+                    //IdCuenta = objRaw.IdCuenta,
+                    //IdExterno = objRaw.IdExterno,
+                    //IdLink = objRaw.IdLink,
+                    //IdProductoBancario = objRaw.IdProductoBancario,
+                    //InstitucionCodigo = objRaw.InstitucionCodigo,
+                    //InstitucionNombre = objRaw.InstitucionNombre,
+                    //InstitucionTipo = objRaw.InstitucionTipo,
+                    //SaldoActual = objRaw.SaldoActual,
+                    //SaldoDisponible = objRaw.SaldoDisponible,
                 };
 
                 objReturn.Result = objModel;

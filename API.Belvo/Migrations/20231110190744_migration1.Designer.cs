@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Belvo.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20231107054143_migration1")]
+    [Migration("20231110190744_migration1")]
     partial class migration1
     {
         /// <inheritdoc />
@@ -30,41 +30,44 @@ namespace API.Belvo.Migrations
                     b.Property<string>("IdCuenta")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime>("CreadoFecha")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("CreatedFecha")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedUserName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("CreditoCollectedFecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreditoCuttingFecha")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CreditoLastPaymentFecha")
+                    b.Property<string>("CreditoCorteFecha")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("CreditoLimite")
                         .HasColumnType("decimal(30, 2)");
 
-                    b.Property<string>("CreditoNextPaymentFecha")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<decimal?>("CreditoPagoMensual")
                         .HasColumnType("decimal(30, 2)");
 
-                    b.Property<decimal?>("CreditoPagoMinimo")
+                    b.Property<decimal>("CreditoPagoMinimo")
                         .HasColumnType("decimal(30, 2)");
 
-                    b.Property<decimal?>("CreditoSinPagoIntereses")
+                    b.Property<decimal?>("CreditoPagoSinInteres")
+                        .HasColumnType("decimal(30, 2)");
+
+                    b.Property<string>("CreditoProximoPagoFecha")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreditoRecoleccionFecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal?>("CreditoSaldoUltimoPeriodo")
                         .HasColumnType("decimal(30, 2)");
 
                     b.Property<decimal?>("CreditoTasaInteres")
                         .HasColumnType("decimal(30, 2)");
 
-                    b.Property<decimal?>("CreditoUltimoPeriodoSaldo")
-                        .HasColumnType("decimal(30, 2)");
+                    b.Property<string>("CreditoUltimoPagoFecha")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CuentaAgencia")
                         .HasColumnType("nvarchar(max)");
@@ -72,11 +75,8 @@ namespace API.Belvo.Migrations
                     b.Property<string>("CuentaCategoria")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CuentaCollectedFecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("CuentaCreatedFecha")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("CuentaIdProductionBancario")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CuentaIdentificacionInterna")
                         .HasColumnType("nvarchar(max)");
@@ -87,9 +87,6 @@ namespace API.Belvo.Migrations
                     b.Property<string>("CuentaIdentificacionPublicaValor")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("CuentaLastAccessedFecha")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("CuentaMonedaCodigo")
                         .HasColumnType("nvarchar(max)");
 
@@ -99,29 +96,29 @@ namespace API.Belvo.Migrations
                     b.Property<string>("CuentaNumero")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CuentaSaldoTipo")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("CuentaTipo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("CuentasPorCobrarCollectedFecha")
+                    b.Property<string>("CuentaTipoSaldo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CuentaUltimoAccesoFecha")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal?>("CuentasPorCobrarValorActual")
+                    b.Property<decimal?>("CuentasPorCobrarActual")
                         .HasColumnType("decimal(30, 2)");
 
-                    b.Property<decimal?>("CuentasPorCobrarValorAnticipado")
+                    b.Property<decimal?>("CuentasPorCobrarAnticipado")
                         .HasColumnType("decimal(30, 2)");
 
-                    b.Property<decimal?>("CuentasPorCobrarValorDisponible")
+                    b.Property<decimal?>("CuentasPorCobrarDisponible")
                         .HasColumnType("decimal(30, 2)");
+
+                    b.Property<DateTime?>("CuentasPorCobrarRecoleccionFecha")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
-
-                    b.Property<DateTime?>("FondosCollectedFecha")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("FondosIdentificacionPublicaJson")
                         .HasColumnType("nvarchar(max)");
@@ -131,6 +128,9 @@ namespace API.Belvo.Migrations
 
                     b.Property<decimal?>("FondosPorcentaje")
                         .HasColumnType("decimal(30, 2)");
+
+                    b.Property<DateTime?>("FondosRecoleccionFecha")
+                        .HasColumnType("datetime2");
 
                     b.Property<decimal?>("FondosSaldo")
                         .HasColumnType("decimal(30, 2)");
@@ -147,9 +147,6 @@ namespace API.Belvo.Migrations
                     b.Property<string>("IdLink")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("IdProductoBancario")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("IdUpdatedUser")
                         .HasColumnType("nvarchar(max)");
 
@@ -162,16 +159,13 @@ namespace API.Belvo.Migrations
                     b.Property<string>("InstitucionTipo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("PrestamoCollectedFecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("PrestamoContractEndFecha")
+                    b.Property<string>("PrestamoContratoFinFecha")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PrestamoContractStartFecha")
+                    b.Property<string>("PrestamoContratoInicioFecha")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PrestamoCuttingFecha")
+                    b.Property<string>("PrestamoCorteFecha")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PrestamoDiaCorte")
@@ -180,22 +174,22 @@ namespace API.Belvo.Migrations
                     b.Property<string>("PrestamoDiaPago")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("PrestamoImporteContrato")
+                    b.Property<decimal?>("PrestamoMontoContrato")
                         .HasColumnType("decimal(30, 2)");
-
-                    b.Property<string>("PrestamoLastPaymentFecha")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PrestamoNumeroContrato")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PrestamoNumeroPlazosPendientes")
-                        .HasColumnType("int");
+                    b.Property<string>("PrestamoNumeroCuotasPendientes")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PrestamoNumeroPlazosTotal")
-                        .HasColumnType("int");
+                    b.Property<string>("PrestamoNumeroCuotasTotal")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("PrestamoPagoMensual")
+                        .HasColumnType("decimal(30, 2)");
+
+                    b.Property<decimal?>("PrestamoPagoSinInteres")
                         .HasColumnType("decimal(30, 2)");
 
                     b.Property<decimal?>("PrestamoPrincipal")
@@ -204,25 +198,37 @@ namespace API.Belvo.Migrations
                     b.Property<decimal?>("PrestamoPrincipalPendientePago")
                         .HasColumnType("decimal(30, 2)");
 
-                    b.Property<decimal?>("PrestamoSaldoPendientePago")
-                        .HasColumnType("decimal(30, 2)");
+                    b.Property<DateTime>("PrestamoRecoleccionFecha")
+                        .HasColumnType("datetime2");
 
-                    b.Property<decimal?>("PrestamoSinPagoIntereses")
+                    b.Property<decimal?>("PrestamoSaldoPendientePago")
                         .HasColumnType("decimal(30, 2)");
 
                     b.Property<string>("PrestamoTarifaJson")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PrestamoTasaInteresJson")
+                    b.Property<string>("PrestamoTasaInteresNombre")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PrestamoTasaInteresTipo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("PrestamoTasaInteresValor")
+                        .HasColumnType("decimal(30, 2)");
 
                     b.Property<string>("PrestamoTipo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("SaldoActual")
+                    b.Property<string>("PrestamoUltimoPagoFecha")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RecoleccionFecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("SaldoActual")
                         .HasColumnType("decimal(30, 2)");
 
-                    b.Property<decimal?>("SaldoDisponible")
+                    b.Property<decimal>("SaldoDisponible")
                         .HasColumnType("decimal(30, 2)");
 
                     b.Property<DateTime>("UpdatedFecha")
@@ -247,6 +253,9 @@ namespace API.Belvo.Migrations
                     b.Property<string>("BuscarRecursos")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreadoFecha")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("CreadoPor")
                         .HasColumnType("nvarchar(max)");
 
@@ -259,34 +268,25 @@ namespace API.Belvo.Migrations
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("IdCreatedUser")
+                    b.Property<string>("Estatus")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("IdExternalBelvo")
+                    b.Property<string>("IdCreatedUser")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IdExterno")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("IdInstitucionUser")
+                    b.Property<string>("IdLinkBelvo")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IdUpdatedUser")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Institucion")
+                    b.Property<string>("IdUsuarioInstitucion")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsFetchHistorical")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("LastAccessedFecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("LinkCreatedFecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LinkEstatusName")
+                    b.Property<string>("Institucion")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ModoAcceso")
@@ -294,6 +294,9 @@ namespace API.Belvo.Migrations
 
                     b.Property<string>("TasaActualizacion")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UltimoAccesoFecha")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("UpdatedFecha")
                         .HasColumnType("datetime2");
@@ -314,17 +317,17 @@ namespace API.Belvo.Migrations
                     b.Property<string>("IdTransaccion")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("AccountingFecha")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Categoria")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CollectedFecha")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("ComercianteNombre")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ContableFecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreadoFecha")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("CreatedFecha")
                         .HasColumnType("datetime2");
@@ -336,6 +339,9 @@ namespace API.Belvo.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Descripcion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Estatus")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IdCreatedUser")
@@ -350,6 +356,9 @@ namespace API.Belvo.Migrations
                     b.Property<string>("IdExterno")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("IdLink")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("IdUpdatedUser")
                         .HasColumnType("nvarchar(max)");
 
@@ -359,37 +368,40 @@ namespace API.Belvo.Migrations
                     b.Property<string>("MonedaCodigo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("Monto")
+                    b.Property<decimal>("Monto")
                         .HasColumnType("decimal(30, 2)");
 
                     b.Property<string>("Observaciones")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("RecoleccionFecha")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Referencia")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("Saldo")
+                    b.Property<decimal>("Saldo")
                         .HasColumnType("decimal(30, 2)");
 
                     b.Property<string>("SubCategoria")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("TarjetaCreditoCollectedFecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("TarjetaCreditoCuentaNombre")
+                    b.Property<string>("TarjetaCreditoFacturaEstatus")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TarjetaCreditoTotalCuentaAnterior")
+                    b.Property<decimal?>("TarjetaCreditoFacturaMonto")
+                        .HasColumnType("decimal(30, 2)");
+
+                    b.Property<string>("TarjetaCreditoFacturaNombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("TarjetaCreditoRecoleccionFecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TarjetaCreditoTotalFacturaAnterior")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Tipo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("TransaccionCreatedFecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("TransaccionEstatusName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedFecha")
@@ -398,7 +410,7 @@ namespace API.Belvo.Migrations
                     b.Property<string>("UpdatedUserName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ValueFecha")
+                    b.Property<string>("ValorFecha")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdTransaccion");

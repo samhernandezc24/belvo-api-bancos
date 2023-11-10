@@ -105,20 +105,20 @@ namespace API.Belvo.Controllers
                 var objRaw = await _linksService.FindSelectorById(id, fields);
                 var objModel = new
                 {
-                    AlmacenamientoCredenciales  = objRaw.AlmacenamientoCredenciales,
-                    BuscarRecursos              = objRaw.BuscarRecursos,
-                    CreadoPor                   = objRaw.CreadoPor,
-                    IdExterno                   = objRaw.IdExterno,
-                    IdInstitucionUser           = objRaw.IdInstitucionUser,
-                    IdLink                      = objRaw.IdLink,
-                    Institucion                 = objRaw.Institucion,
-                    IsFetchHistorical           = objRaw.IsFetchHistorical,
-                    LastAccessedFecha           = objRaw.LastAccessedFecha,
-                    LinkCreatedFecha            = objRaw.LinkCreatedFecha,
-                    LinkEstatusName             = objRaw.LinkEstatusName,
-                    ModoAcceso                  = objRaw.ModoAcceso,
-                    TasaActualizacion           = objRaw.TasaActualizacion,
-                    Vencimiento                 = objRaw.Vencimiento,
+                    //AlmacenamientoCredenciales  = objRaw.AlmacenamientoCredenciales,
+                    //BuscarRecursos              = objRaw.BuscarRecursos,
+                    //CreadoPor                   = objRaw.CreadoPor,
+                    //IdExterno                   = objRaw.IdExterno,
+                    //IdInstitucionUser           = objRaw.IdInstitucionUser,
+                    //IdLink                      = objRaw.IdLink,
+                    //Institucion                 = objRaw.Institucion,
+                    //IsFetchHistorical           = objRaw.IsFetchHistorical,
+                    //LastAccessedFecha           = objRaw.LastAccessedFecha,
+                    //LinkCreatedFecha            = objRaw.LinkCreatedFecha,
+                    //LinkEstatusName             = objRaw.LinkEstatusName,
+                    //ModoAcceso                  = objRaw.ModoAcceso,
+                    //TasaActualizacion           = objRaw.TasaActualizacion,
+                    //Vencimiento                 = objRaw.Vencimiento,
                 };
 
                 objReturn.Result = objModel;
