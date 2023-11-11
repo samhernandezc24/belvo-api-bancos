@@ -13,7 +13,6 @@
         public DateTime CreadoFecha { get; set; }
         public string IdUsuarioInstitucion { get; set; }
         public string AlmacenamientoCredenciales { get; set; }
-        public string Vencimiento { get; set; }
         public string BuscarRecursos { get; set; }
     }
 }
