@@ -21,7 +21,13 @@
         public decimal SaldoDisponible { get; set; }
 
         public string CuentaCategoria { get; set; }
-        public string CuentaMonedaCodigo { get; set; }
+        public string MonedaCodigo { get; set; }
+        public string CuentaTipoSaldo { get; set; }
+        public string IdProductoBancario { get; set; }
+        public DateTime? UltimoAccesoFecha { get; set; }
+        public string CuentaIdentificacionInterna { get; set; }
+        public string CuentaIdentificacionPublicaNombre { get; set; }
+        public string CuentaIdentificacionPublicaValor { get; set; }
 
         // DatosPrestamo [LoanData]
         // DatosPrestamo [LoanData] => Tarifa [Fees]
@@ -32,7 +38,7 @@
         public decimal? PrestamoPrincipal { get; set; }
         public string PrestamoDiaCorte { get; set; }
         public string PrestamoCorteFecha { get; set; }
-        public DateTime PrestamoRecoleccionFecha { get; set; }
+        public DateTime? PrestamoRecoleccionFecha { get; set; }
 
         // DatosPrestamo [LoanData] => TasaInteres [InterestRates]
         public string PrestamoTasaInteresNombre { get; set; }
@@ -53,23 +59,16 @@
         public decimal? PrestamoPagoSinInteres { get; set; }
 
         // DatosCredito [CreditData]
-        public DateTime CreditoRecoleccionFecha { get; set; }
+        public DateTime? CreditoRecoleccionFecha { get; set; }
         public decimal? CreditoLimite { get; set; }
         public string CreditoCorteFecha { get; set; }
         public decimal? CreditoTasaInteres { get; set; }
-        public decimal CreditoPagoMinimo { get; set; }
+        public decimal? CreditoPagoMinimo { get; set; }
         public decimal? CreditoPagoMensual { get; set; }
         public string CreditoUltimoPagoFecha { get; set; }
         public string CreditoProximoPagoFecha { get; set; }
         public decimal? CreditoSaldoUltimoPeriodo { get; set; }
-        public decimal? CreditoPagoSinInteres { get; set; }
-
-        public string CuentaTipoSaldo { get; set; }
-        public string CuentaIdProductionBancario { get; set; }
-        public DateTime? CuentaUltimoAccesoFecha { get; set; }
-        public string CuentaIdentificacionInterna { get; set; }
-        public string CuentaIdentificacionPublicaNombre { get; set; }
-        public string CuentaIdentificacionPublicaValor { get; set; }
+        public decimal? CreditoPagoSinInteres { get; set; }        
 
         // DatosFondo [FundsData]
         public DateTime? FondosRecoleccionFecha { get; set; }

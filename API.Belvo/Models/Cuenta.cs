@@ -8,9 +8,9 @@ namespace API.Belvo.Models
     public class Cuenta : UserCreated
     {
         [Key]
-        public string IdCuenta { get; set; }
-        public string IdExterno { get; set; }   // ID LINK GENERADOR WORKCUBE
-        public string IdLink { get; set; }      // ID LINK OBTENIDO API BELVO
+        public string IdCuenta { get; set; }            // GUID GENERADO POR WORKCUBE
+        public string IdCuentaBelvo { get; set; }       // ID GENERADO POR BELVO
+        public string IdLink { get; set; }              // ID GENERADO POR BELVO
 
         // Institucion [Institution]
         public string InstitucionNombre { get; set; }
@@ -31,7 +31,13 @@ namespace API.Belvo.Models
         public decimal SaldoDisponible { get; set; }
 
         public string CuentaCategoria { get; set; }
-        public string CuentaMonedaCodigo { get; set; }
+        public string MonedaCodigo { get; set; }
+        public string CuentaTipoSaldo { get; set; }
+        public string IdProductoBancario { get; set; }
+        public DateTime? UltimoAccesoFecha { get; set; }
+        public string CuentaIdentificacionInterna { get; set; }
+        public string CuentaIdentificacionPublicaNombre { get; set; }
+        public string CuentaIdentificacionPublicaValor { get; set; }
 
         // DatosPrestamo [LoanData]
         // DatosPrestamo [LoanData] => Tarifa [Fees]
@@ -42,19 +48,16 @@ namespace API.Belvo.Models
         public decimal? PrestamoPrincipal { get; set; }
         public string PrestamoDiaCorte { get; set; }
         public string PrestamoCorteFecha { get; set; }
-        public DateTime PrestamoRecoleccionFecha { get; set; }
+        public DateTime? PrestamoRecoleccionFecha { get; set; }
 
         // DatosPrestamo [LoanData] => TasaInteres [InterestRates]
-        public string PrestamoTasaInteresNombre { get; set; }
-        public string PrestamoTasaInteresTipo { get; set; }
-        [Column(TypeName = "decimal(30, 2)")]
-        public decimal PrestamoTasaInteresValor { get; set; }
+        public string PrestamoTasaInteresJson { get; set; }
 
         [Column(TypeName = "decimal(30, 2)")]
         public decimal? PrestamoMontoContrato { get; set; }
         public string PrestamoNumeroContrato { get; set; }
         public string PrestamoContratoInicioFecha { get; set; }
-        public string PrestamoContratoFinFecha { get; set; }
+        public string PrestamoContratoFinalizacionFecha { get; set; }
         [Column(TypeName = "decimal(30, 2)")]
         public decimal? PrestamoPagoMensual { get; set; }
         public string PrestamoDiaPago { get; set; }
@@ -69,14 +72,14 @@ namespace API.Belvo.Models
         public decimal? PrestamoPagoSinInteres { get; set; }
 
         // DatosCredito [CreditData]
-        public DateTime CreditoRecoleccionFecha { get; set; }
+        public DateTime? CreditoRecoleccionFecha { get; set; }
         [Column(TypeName = "decimal(30, 2)")]
         public decimal? CreditoLimite { get; set; }
         public string CreditoCorteFecha { get; set; }
         [Column(TypeName = "decimal(30, 2)")]
         public decimal? CreditoTasaInteres { get; set; }
         [Column(TypeName = "decimal(30, 2)")]
-        public decimal CreditoPagoMinimo { get; set; }
+        public decimal? CreditoPagoMinimo { get; set; }
         [Column(TypeName = "decimal(30, 2)")]
         public decimal? CreditoPagoMensual { get; set; }
         public string CreditoUltimoPagoFecha { get; set; }
@@ -85,13 +88,6 @@ namespace API.Belvo.Models
         public decimal? CreditoSaldoUltimoPeriodo { get; set; }
         [Column(TypeName = "decimal(30, 2)")]
         public decimal? CreditoPagoSinInteres { get; set; }
-
-        public string CuentaTipoSaldo { get; set; }
-        public string CuentaIdProductionBancario { get; set; }
-        public DateTime? CuentaUltimoAccesoFecha { get; set; }
-        public string CuentaIdentificacionInterna { get; set; }
-        public string CuentaIdentificacionPublicaNombre { get; set; }
-        public string CuentaIdentificacionPublicaValor { get; set; }
 
         // DatosFondo [FundsData]
         public DateTime? FondosRecoleccionFecha { get; set; }

@@ -40,10 +40,10 @@
 
     public class DatosTarjetaCredito
     {
-        public DateTime collected_at { get; set; }
+        public DateTime? collected_at { get; set; }
         public string bill_name { get; set; }
         public string bill_status { get; set; }
-        public decimal bill_amount { get; set; }
+        public decimal? bill_amount { get; set; }
         public string previous_bill_total { get; set; }
     }
 }

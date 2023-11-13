@@ -24,17 +24,19 @@
         public string agency { get; set; }
         public string number { get; set; }
         public Saldo balance { get; set; }
+        public decimal balance_current => balance != null ? balance.current : 0;
+        public decimal balance_available => balance != null ? balance.available : 0;
         public string category { get; set; }
         public string currency { get; set; }
-        public DatosPrestamo loan_data { get; set; }
-        public DatosCredito credit_data { get; set; }
         public string balance_type { get; set; }
         public string bank_product_id { get; set; }
-        public DateTime? last_accessed_at { get; set; }
-        public string last_accessed_at_natural => last_accessed_at.HasValue ? last_accessed_at.Value.ToString("dd/MM/yyyy hh:mm tt") : null;
         public string internal_identification { get; set; }
         public string public_identification_name { get; set; }
         public string public_identification_value { get; set; }
+        public DatosPrestamo loan_data { get; set; }
+        public DatosCredito credit_data { get; set; }
+        public DateTime? last_accessed_at { get; set; }
+        public string last_accessed_at_natural => last_accessed_at.HasValue ? last_accessed_at.Value.ToString("dd/MM/yyyy hh:mm tt") : null;
         public DatosFondo funds_data { get; set; }
         public DatosCuentasPorCobrar receivables_data { get; set; }
     }
@@ -89,11 +91,11 @@
 
     public class DatosCredito
     {
-        public DateTime collected_at { get; set; }
-        public decimal credit_limit { get; set; }
+        public DateTime? collected_at { get; set; }
+        public decimal? credit_limit { get; set; }
         public string cutting_date { get; set; } 
         public decimal? interest_rate { get; set; }
-        public decimal minimum_payment { get; set; }
+        public decimal? minimum_payment { get; set; }
         public decimal? monthly_payment { get; set; }
         public string last_payment_date { get; set; }
         public string next_payment_date { get; set; }
@@ -103,7 +105,7 @@
 
     public class DatosFondo
     {
-        public DateTime collected_at { get; set; }
+        public DateTime? collected_at { get; set; }
         public string name { get; set; }
         public string type { get; set; }
         public List<IdentificacionPublica> public_identifications { get; set; }
@@ -122,6 +124,6 @@
         public decimal? current { get; set; }
         public decimal? available { get; set; }
         public decimal? anticipated { get; set; }
-        public DateTime collected_at { get; set; }
+        public DateTime? collected_at { get; set; }
     }
 }

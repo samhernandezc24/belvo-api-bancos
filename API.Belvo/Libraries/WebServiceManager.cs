@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using RestSharp;
-using Workcube.Libraries;
 
 namespace API.Belvo.Libraries
 {

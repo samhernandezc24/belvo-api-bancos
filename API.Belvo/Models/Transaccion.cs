@@ -8,35 +8,35 @@ namespace API.Belvo.Models
     public class Transaccion : UserCreated
     {
         [Key]
-        public string IdTransaccion { get; set; }                 
+        public string IdTransaccion { get; set; }           // GUID GENERADO POR WORKCUBE
+        public string IdTransaccionBelvo { get; set; }      // ID GENERADO POR BELVO
 
         // Cuenta [Account]
-        public string IdCuenta { get; set; }
-        public string IdExterno { get; set; }       // ID LINK GENERADO POR WORKCUBE
-        public string IdLink { get; set; }          // ID LINK OBTENIDO API BELVO
+        public string IdCuenta { get; set; }                // ID GENERADO POR BELVO
+        public string IdLink { get; set; }                  // ID GENERADO POR BELVO
         public string IdCuentaProductoBancario { get; set; }
 
         public DateTime RecoleccionFecha { get; set; }
         public DateTime CreadoFecha { get; set; }
-        public string Categoria { get; set; }
-        public string SubCategoria { get; set; }
+        public string TransaccionCategoria { get; set; }
+        public string TransaccionSubCategoria { get; set; }
 
         // Comerciante [Merchant]
         public string ComercianteNombre { get; set; }
 
-        public string Tipo { get; set; }
+        public string TransaccionTipo { get; set; }
         [Column(TypeName = "decimal(30, 2)")]
-        public decimal Monto { get; set; }
-        public string Estatus { get; set; }
+        public decimal TransaccionMonto { get; set; }
+        public string TransaccionEstatus { get; set; }
         [Column(TypeName = "decimal(30, 2)")]
-        public decimal Saldo { get; set; }
+        public decimal TransaccionSaldo { get; set; }
         public string MonedaCodigo { get; set; }
-        public string Referencia { get; set; }
-        public string ValorFecha { get; set; }
-        public string Descripcion { get; set; }
-        public string Observaciones { get; set; }
-        public DateTime ContableFecha { get; set; }
-        public string IdentificacionInterna { get; set; }
+        public string TransaccionReferencia { get; set; }
+        public string TransaccionValorFecha { get; set; }
+        public string TransaccionDescripcion { get; set; }
+        public string TransaccionObservaciones { get; set; }
+        public DateTime TransaccionContableFecha { get; set; }
+        public string TransaccionIdentificacionInterna { get; set; }
 
         // DatosTarjetaCredito [CreditCardData]
         public DateTime? TarjetaCreditoRecoleccionFecha { get; set; }

@@ -5,25 +5,25 @@
         public string IdTransaccion { get; set; }
         public DateTime RecoleccionFecha { get; set; }
         public DateTime CreadoFecha { get; set; }
-        public string Categoria { get; set; }
-        public string SubCategoria { get; set; }
+        public string TransaccionCategoria { get; set; }
+        public string TransaccionSubCategoria { get; set; }
 
         // Comerciante [Merchant]
         public string ComercianteLogo { get; set; }
         public string ComercianteNombre { get; set; }
         public string ComercianteSitioWeb { get; set; } 
 
-        public string Tipo { get; set; }
-        public decimal Monto { get; set; }
-        public string Estatus { get; set; }
-        public decimal Saldo { get; set; }
+        public string TransaccionTipo { get; set; }
+        public decimal TransaccionMonto { get; set; }
+        public string TransaccionEstatus { get; set; }
+        public decimal TransaccionSaldo { get; set; }
         public string MonedaCodigo { get; set; }
-        public string Referencia { get; set; }
-        public string ValorFecha { get; set; }
-        public string Descripcion { get; set; }
-        public string Observaciones { get; set; }
-        public DateTime ContableFecha { get; set; }
-        public string IdentificacionInterna { get; set; }
+        public string TransaccionReferencia { get; set; }
+        public string TransaccionValorFecha { get; set; }
+        public string TransaccionDescripcion { get; set; }
+        public string TransaccionObservaciones { get; set; }
+        public DateTime TransaccionContableFecha { get; set; }
+        public string TransaccionIdentificacionInterna { get; set; }
 
         // DatosTarjetaCredito [CreditCardData]
         public DateTime? TarjetaCreditoRecoleccionFecha { get; set; }
