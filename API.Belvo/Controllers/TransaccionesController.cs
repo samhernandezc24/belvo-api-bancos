@@ -1,8 +1,9 @@
-﻿using API.Belvo.Services;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
+using API.Belvo.Models;
+using System.Transactions;
+using API.Belvo.Services;
 using Microsoft.AspNetCore.Mvc;
 using Workcube.Libraries;
-using API.Belvo.Models;
 
 namespace API.Belvo.Controllers
 {
@@ -12,7 +13,7 @@ namespace API.Belvo.Controllers
     {
         private readonly TransaccionesService _transaccionesService;
 
-        public TransaccionesController(TransaccionesService transaccionesService)
+        public TransaccionesController(TransaccionesService transaccionesService) 
         {
             _transaccionesService = transaccionesService;
         }
@@ -21,177 +22,169 @@ namespace API.Belvo.Controllers
         public async Task<ActionResult<dynamic>> Index()
         {
             JsonReturn objReturn = new JsonReturn();
-
             try
             {
-                var lstUsuarios = await _transaccionesService.List();
+                var lstTransacciones = await _transaccionesService.List();
 
                 objReturn.Result = new
                 {
-                    usuarios = lstUsuarios,
+                    transacciones = lstTransacciones,
                 };
 
                 objReturn.Success(SuccessMessage.REQUEST);
             }
-            catch (AppException exception)
+            catch (AppException appEx)
             {
-                objReturn.Exception(exception);
+                objReturn.Exception(appEx);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                objReturn.Exception(ExceptionMessage.RawException(exception));
+                objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return objReturn.build();
+            return Ok(objReturn.build());
         }
 
         [HttpPost("DataSource")]
         public async Task<ActionResult<dynamic>> List(JsonObject data)
         {
             JsonReturn objReturn = new JsonReturn();
-
             try
             {
                 objReturn.Result = await _transaccionesService.DataSource(Globals.JsonData(data));
-
                 objReturn.Success(SuccessMessage.REQUEST);
             }
-            catch (AppException exception)
+            catch (AppException appEx)
             {
-                objReturn.Exception(exception);
+                objReturn.Exception(appEx);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                objReturn.Exception(ExceptionMessage.RawException(exception));
+                objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return objReturn.build();
+            return Ok(objReturn.build());
         }
 
         [HttpPost("Store")]
         public async Task<ActionResult<dynamic>> Store(JsonObject data)
         {
             JsonReturn objReturn = new JsonReturn();
-
             try
             {
                 objReturn.Result = await _transaccionesService.Create(Globals.JsonData(data));
-
-                objReturn.Title = "Nueva transacción";
-                objReturn.Message = "La nueva transacción se ha creado exitosamente.";
+                objReturn.Success(SuccessMessage.REQUEST);
             }
-            catch (AppException exception)
+            catch (AppException appEx)
             {
-                objReturn.Exception(exception);
+                objReturn.Exception(appEx);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                objReturn.Exception(ExceptionMessage.RawException(exception));
+                objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return objReturn.build();
+            return Ok(objReturn.build());
         }
 
         [HttpPost("Details")]
         public async Task<ActionResult<dynamic>> Details(JsonObject data)
         {
             JsonReturn objReturn = new JsonReturn();
-
             try
             {
-                string id       = Globals.ParseGuid(Globals.JsonData(data).idTransaccion);
-                string fields   = "AccountingFecha,Categoria,CollectedFecha,ComercianteNombre,Descripcion,IdCuenta,IdCuentaProductoBancario,IdentificacionInterna,IdExterno,IdTransaccion,MonedaCodigo,Monto,Observaciones,Referencia," +
-                                  "Saldo,SubCategoria,TarjetaCreditoCollectedFecha,TarjetaCreditoCuentaNombre,TarjetaCreditoTotalCuentaAnterior,Tipo,TransaccionEstatusName,ValueFecha";
+                string id = Globals.ParseGuid(Globals.JsonData(data).idTransaccion);
+                string fields = "ComercianteNombre,CreadoFecha,IdCuenta,IdCuentaProductoBancario,IdLink,IdTransaccion,IdTransaccionBelvo,MonedaCodigo,RecoleccionFecha," +
+                                "TarjetaCreditoFacturaEstatus,TarjetaCreditoFacturaMonto,TarjetaCreditoFacturaNombre,TarjetaCreditoRecoleccionFecha,TarjetaCreditoTotalFacturaAnterior," +
+                                "TransaccionCategoria,TransaccionContableFecha,TransaccionDescripcion,TransaccionEstatus,TransaccionIdentificacionInterna,TransaccionMonto," +
+                                "TransaccionObservaciones,TransaccionReferencia,TransaccionSaldo,TransaccionSubCategoria,TransaccionTipo,TransaccionValorFecha";
 
                 var objRaw = await _transaccionesService.FindSelectorById(id, fields);
                 var objModel = new
                 {
-                    //AccountingFecha                     = objRaw.AccountingFecha,                    
-                    //Categoria                           = objRaw.Categoria,
-                    //CollectedFecha                      = objRaw.CollectedFecha,
-                    //ComercianteNombre                   = objRaw.ComercianteNombre,
-                    //Descripcion                         = objRaw.Descripcion,
-                    //IdCuenta                            = objRaw.IdCuenta,
-                    //IdCuentaProductoBancario            = objRaw.IdCuentaProductoBancario,
-                    //IdentificacionInterna               = objRaw.IdentificacionInterna,
-                    //IdExterno                           = objRaw.IdExterno,
-                    //IdTransaccion                       = objRaw.IdTransaccion,
-                    //MonedaCodigo                        = objRaw.MonedaCodigo,
-                    //Monto                               = objRaw.Monto,
-                    //Observaciones                       = objRaw.Observaciones,
-                    //Referencia                          = objRaw.Referencia,
-                    //Saldo                               = objRaw.Saldo,
-                    //SubCategoria                        = objRaw.SubCategoria,
-                    //TarjetaCreditoCollectedFecha        = objRaw.TarjetaCreditoCollectedFecha,
-                    //TarjetaCreditoCuentaNombre          = objRaw.TarjetaCreditoCuentaNombre,
-                    //TarjetaCreditoTotalCuentaAnterior   = objRaw.TarjetaCreditoTotalCuentaAnterior,
-                    //Tipo                                = objRaw.Tipo,
-                    //TransaccionEstatusName              = objRaw.TransaccionEstatusName,
-                    //ValueFecha                          = objRaw.ValueFecha,
+                    ComercianteNombre                   = objRaw.ComercianteNombre,
+                    CreadoFecha                         = objRaw.CreadoFecha,
+                    IdCuenta                            = objRaw.IdCuenta,
+                    IdCuentaProductoBancario            = objRaw.IdCuentaProductoBancario,
+                    IdLink                              = objRaw.IdLink,
+                    IdTransaccion                       = objRaw.IdTransaccion,
+                    IdTransaccionBelvo                  = objRaw.IdTransaccionBelvo,
+                    MonedaCodigo                        = objRaw.MonedaCodigo,
+                    RecoleccionFecha                    = objRaw.RecoleccionFecha,
+                    TarjetaCreditoFacturaEstatus        = objRaw.TarjetaCreditoFacturaEstatus,
+                    TarjetaCreditoFacturaMonto          = objRaw.TarjetaCreditoFacturaMonto,
+                    TarjetaCreditoFacturaNombre         = objRaw.TarjetaCreditoFacturaNombre,
+                    TarjetaCreditoRecoleccionFecha      = objRaw.TarjetaCreditoRecoleccionFecha,
+                    TarjetaCreditoTotalFacturaAnterior  = objRaw.TarjetaCreditoTotalFacturaAnterior,
+                    TransaccionCategoria                = objRaw.TransaccionCategoria,
+                    TransaccionContableFecha            = objRaw.TransaccionContableFecha,
+                    TransaccionDescripcion              = objRaw.TransaccionDescripcion,
+                    TransaccionEstatus                  = objRaw.TransaccionEstatus,
+                    TransaccionIdentificacionInterna    = objRaw.TransaccionIdentificacionInterna,
+                    TransaccionMonto                    = objRaw.TransaccionMonto,
+                    TransaccionObservaciones            = objRaw.TransaccionObservaciones,
+                    TransaccionReferencia               = objRaw.TransaccionReferencia,
+                    TransaccionSaldo                    = objRaw.TransaccionSaldo,
+                    TransaccionSubCategoria             = objRaw.TransaccionSubCategoria,
+                    TransaccionTipo                     = objRaw.TransaccionTipo,
+                    TransaccionValorFecha               = objRaw.TransaccionValorFecha,
                 };
 
                 objReturn.Result = objModel;
-
                 objReturn.Success(SuccessMessage.REQUEST);
             }
-            catch (AppException exception)
+            catch (AppException appEx)
             {
-                objReturn.Exception(exception);
+                objReturn.Exception(appEx);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                objReturn.Exception(ExceptionMessage.RawException(exception));
+                objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return objReturn.build();
+            return Ok(objReturn.build());
         }
 
         [HttpPost("Update")]
         public async Task<ActionResult<dynamic>> Update(JsonObject data)
         {
             JsonReturn objReturn = new JsonReturn();
-
             try
             {
                 objReturn.Result = await _transaccionesService.Update(Globals.JsonData(data), User);
-
-                objReturn.Title = "Actualizado";
-                objReturn.Message = "La transacción se ha actualizado exitosamente.";
+                objReturn.Success(SuccessMessage.REQUEST);
             }
-            catch (AppException exception)
+            catch (AppException appEx)
             {
-                objReturn.Exception(exception);
+                objReturn.Exception(appEx);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                objReturn.Exception(ExceptionMessage.RawException(exception));
+                objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return objReturn.build();
+            return Ok(objReturn.build());
         }
 
         [HttpPost("Delete")]
         public async Task<ActionResult<dynamic>> Delete(JsonObject data)
         {
             JsonReturn objReturn = new JsonReturn();
-
             try
             {
                 objReturn.Result = await _transaccionesService.Delete(Globals.JsonData(data), User);
-
-                objReturn.Title = "Eliminado";
-                objReturn.Message = "La transacción se ha eliminado exitosamente.";
+                objReturn.Success(SuccessMessage.REQUEST);
             }
-            catch (AppException exception)
+            catch (AppException appEx)
             {
-                objReturn.Exception(exception);
+                objReturn.Exception(appEx);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                objReturn.Exception(ExceptionMessage.RawException(exception));
+                objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return objReturn.build();
+            return Ok(objReturn.build());
         }
     }
 }

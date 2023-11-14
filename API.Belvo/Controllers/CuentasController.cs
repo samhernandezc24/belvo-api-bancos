@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Nodes;
+using API.Belvo.Models;
 using API.Belvo.Services;
 using Microsoft.AspNetCore.Mvc;
 using Workcube.Libraries;
@@ -10,210 +11,174 @@ namespace API.Belvo.Controllers
     public class CuentasController : ControllerBase
     {
         private readonly CuentasService _cuentasService;
-
-        //public CuentasController(CuentasService cuentasService)
-        //{
-        //    _cuentasService = cuentasService;
-        //}
+            
+        public CuentasController(CuentasService cuentasService)
+        {
+            _cuentasService = cuentasService;
+        }
 
         [HttpPost("Index")]
         public async Task<ActionResult<dynamic>> Index()
         {
             JsonReturn objReturn = new JsonReturn();
-
             try
             {
-                var lstUsuarios = await _cuentasService.List();
+                var lstCuentas = await _cuentasService.List();
 
                 objReturn.Result = new
                 {
-                    usuarios = lstUsuarios,
+                    cuentas = lstCuentas,
                 };
 
                 objReturn.Success(SuccessMessage.REQUEST);
             }
-            catch (AppException exception)
+            catch (AppException appEx)
             {
-                objReturn.Exception(exception);
+                objReturn.Exception(appEx);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                objReturn.Exception(ExceptionMessage.RawException(exception));
+                objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return objReturn.build();
+            return Ok(objReturn.build());
         }
 
         [HttpPost("DataSource")]
         public async Task<ActionResult<dynamic>> List(JsonObject data)
         {
             JsonReturn objReturn = new JsonReturn();
-
             try
             {
                 objReturn.Result = await _cuentasService.DataSource(Globals.JsonData(data));
-
                 objReturn.Success(SuccessMessage.REQUEST);
             }
-            catch (AppException exception)
+            catch (AppException appEx)
             {
-                objReturn.Exception(exception);
+                objReturn.Exception(appEx);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                objReturn.Exception(ExceptionMessage.RawException(exception));
-            }
-
-            return objReturn.build();
-        }
-
-        [HttpPost("Create")]
-        public async Task<ActionResult<dynamic>> Create()
-        {
-            JsonReturn objReturn = new JsonReturn();
-
-            try
-            {
-                var lstInstituciones = await BelvoService.InstitutionsList();
-
-                objReturn.Result = new
-                {
-                    instituciones = lstInstituciones,
-                };
-
-                objReturn.Success(SuccessMessage.REQUEST);
-            }
-            catch (AppException exception)
-            {
-                objReturn.Exception(exception);
-            }
-            catch (Exception exception)
-            {
-                objReturn.Exception(ExceptionMessage.RawException(exception));
+                objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return objReturn.build();
+            return Ok(objReturn.build());
         }
 
         [HttpPost("Store")]
         public async Task<ActionResult<dynamic>> Store(JsonObject data)
         {
             JsonReturn objReturn = new JsonReturn();
-
             try
             {
                 objReturn.Result = await _cuentasService.Create(Globals.JsonData(data));
-                objReturn.Title = "Nueva cuenta";
-                objReturn.Message = "La nueva cuenta se ha creado exitosamente.";
+                objReturn.Success(SuccessMessage.REQUEST);
             }
-            catch (AppException exception)
+            catch (AppException appEx)
             {
-                objReturn.Exception(exception);
+                objReturn.Exception(appEx);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                objReturn.Exception(ExceptionMessage.RawException(exception));
+                objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return objReturn.build();
+            return Ok(objReturn.build());
         }
 
         [HttpPost("Details")]
         public async Task<ActionResult<dynamic>> Details(JsonObject data)
         {
             JsonReturn objReturn = new JsonReturn();
-
             try
             {
                 string id = Globals.ParseGuid(Globals.JsonData(data).idCuenta);
-                string fields = "CuentaAgencia,CuentaCategoria,CuentaCreatedFecha,CuentaLastAccessedFecha,CuentaMonedaCodigo,CuentaNombre,CuentaNumero,CuentaSaldoTipo,CuentaTipo,IdCuenta,IdExterno,IdLink,IdProductoBancario," +
-                                "InstitucionCodigo,InstitucionNombre,InstitucionTipo,SaldoActual,SaldoDisponible";
+                string fields = "CreadoFecha,CuentaAgencia,CuentaCategoria,CuentaIdentificacionInterna,CuentaIdentificacionPublicaNombre,CuentaIdentificacionPublicaValor," +
+                                "CuentaNombre,CuentaNumero,CuentaTipo,CuentaTipoSaldo,IdCuenta,IdCuentaBelvo,IdLink,IdProductoBancario,InstitucionCodigo,InstitucionNombre" +
+                                "InstitucionTipo,MonedaCodigo,RecoleccionFecha,SaldoActual,SaldoDisponible,UltimoAccesoFecha";
 
                 var objRaw = await _cuentasService.FindSelectorById(id, fields);
                 var objModel = new
                 {
-                    //CuentaAgencia = objRaw.CuentaAgencia,
-                    //CuentaCategoria = objRaw.CuentaCategoria,
-                    //CuentaCreatedFecha = objRaw.CuentaCreatedFecha,
-                    //CuentaLastAccessedFecha = objRaw.CuentaLastAccessedFecha,
-                    //CuentaMonedaCodigo = objRaw.CuentaMonedaCodigo,
-                    //CuentaNombre = objRaw.CuentaNombre,
-                    //CuentaNumero = objRaw.CuentaNumero,
-                    //CuentaSaldoTipo = objRaw.CuentaSaldoTipo,
-                    //CuentaTipo = objRaw.CuentaTipo,
-                    //IdCuenta = objRaw.IdCuenta,
-                    //IdExterno = objRaw.IdExterno,
-                    //IdLink = objRaw.IdLink,
-                    //IdProductoBancario = objRaw.IdProductoBancario,
-                    //InstitucionCodigo = objRaw.InstitucionCodigo,
-                    //InstitucionNombre = objRaw.InstitucionNombre,
-                    //InstitucionTipo = objRaw.InstitucionTipo,
-                    //SaldoActual = objRaw.SaldoActual,
-                    //SaldoDisponible = objRaw.SaldoDisponible,
+                    CreadoFecha                         = objRaw.CreadoFecha,                    
+                    CuentaAgencia                       = objRaw.CuentaAgencia,
+                    CuentaCategoria                     = objRaw.CuentaCategoria,
+                    CuentaIdentificacionInterna         = objRaw.CuentaIdentificacionInterna,
+                    CuentaIdentificacionPublicaNombre   = objRaw.CuentaIdentificacionPublicaNombre,
+                    CuentaIdentificacionPublicaValor    = objRaw.CuentaIdentificacionPublicaValor,
+                    CuentaNombre                        = objRaw.CuentaNombre,
+                    CuentaNumero                        = objRaw.CuentaNumero,
+                    CuentaTipo                          = objRaw.CuentaTipo,
+                    CuentaTipoSaldo                     = objRaw.CuentaTipoSaldo,
+                    IdCuenta                            = objRaw.IdCuenta,
+                    IdCuentaBelvo                       = objRaw.IdCuentaBelvo,
+                    IdLink                              = objRaw.IdLink,
+                    IdProductoBancario                  = objRaw.IdProductoBancario,
+                    InstitucionCodigo                   = objRaw.InstitucionCodigo,
+                    InstitucionNombre                   = objRaw.InstitucionNombre,
+                    InstitucionTipo                     = objRaw.InstitucionTipo,
+                    MonedaCodigo                        = objRaw.MonedaCodigo,
+                    RecoleccionFecha                    = objRaw.RecoleccionFecha,
+                    SaldoActual                         = objRaw.SaldoActual,
+                    SaldoDisponible                     = objRaw.SaldoDisponible,
+                    UltimoAccesoFecha                   = objRaw.UltimoAccesoFecha,
                 };
 
                 objReturn.Result = objModel;
-
                 objReturn.Success(SuccessMessage.REQUEST);
             }
-            catch (AppException exception)
+            catch (AppException appEx)
             {
-                objReturn.Exception(exception);
+                objReturn.Exception(appEx);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                objReturn.Exception(ExceptionMessage.RawException(exception));
+                objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return objReturn.build();
+            return Ok(objReturn.build());
         }
 
         [HttpPost("Update")]
         public async Task<ActionResult<dynamic>> Update(JsonObject data)
         {
             JsonReturn objReturn = new JsonReturn();
-
             try
             {
                 objReturn.Result = await _cuentasService.Update(Globals.JsonData(data), User);
-
-                objReturn.Title = "Actualizado";
-                objReturn.Message = "La cuenta se ha actualizado exitosamente.";
+                objReturn.Success(SuccessMessage.REQUEST);
             }
-            catch (AppException exception)
+            catch (AppException appEx)
             {
-                objReturn.Exception(exception);
+                objReturn.Exception(appEx);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                objReturn.Exception(ExceptionMessage.RawException(exception));
+                objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return objReturn.build();
+            return Ok(objReturn.build());
         }
 
         [HttpPost("Delete")]
         public async Task<ActionResult<dynamic>> Delete(JsonObject data)
         {
             JsonReturn objReturn = new JsonReturn();
-
             try
             {
                 objReturn.Result = await _cuentasService.Delete(Globals.JsonData(data), User);
-
-                objReturn.Title = "Eliminado";
-                objReturn.Message = "La cuenta se ha eliminado exitosamente.";
+                objReturn.Success(SuccessMessage.REQUEST);
             }
-            catch (AppException exception)
+            catch (AppException appEx)
             {
-                objReturn.Exception(exception);
+                objReturn.Exception(appEx);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                objReturn.Exception(ExceptionMessage.RawException(exception));
+                objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return objReturn.build();
+            return Ok(objReturn.build());
         }
     }
 }

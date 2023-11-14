@@ -1,6 +1,5 @@
 ﻿using System.Text.Json.Nodes;
 using API.Belvo.Services;
-using API.Belvo.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Workcube.Libraries;
 
@@ -14,175 +13,160 @@ namespace API.Belvo.Controllers
 
         public LinksController(LinksService linksService) 
         {
-            _linksService = linksService;        
+            _linksService = linksService;
         }
 
         [HttpPost("Index")]
         public async Task<ActionResult<dynamic>> Index()
         {
             JsonReturn objReturn = new JsonReturn();
-
             try
             {
-                var lstUsuarios = await _linksService.List();
+                var lstLinks = await _linksService.List();
 
                 objReturn.Result = new
                 {
-                    usuarios = lstUsuarios,
+                    links = lstLinks,                     
                 };
 
-                objReturn.Success(SuccessMessage.REQUEST);
+                objReturn.Success(SuccessMessage.REQUEST);                
             }
-            catch (AppException exception)
+            catch (AppException appEx)
             {
-                objReturn.Exception(exception);
+                objReturn.Exception(appEx);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                objReturn.Exception(ExceptionMessage.RawException(exception));
+                objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return objReturn.build();
+            return Ok(objReturn.build());
         }
 
         [HttpPost("DataSource")]
         public async Task<ActionResult<dynamic>> List(JsonObject data)
         {
             JsonReturn objReturn = new JsonReturn();
-
             try
             {
                 objReturn.Result = await _linksService.DataSource(Globals.JsonData(data));
-
                 objReturn.Success(SuccessMessage.REQUEST);
             }
-            catch (AppException exception)
+            catch (AppException appEx)
             {
-                objReturn.Exception(exception);
+                objReturn.Exception(appEx);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                objReturn.Exception(ExceptionMessage.RawException(exception));
+                objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return objReturn.build();
+            return Ok(objReturn.build());
         }
 
         [HttpPost("Store")]
         public async Task<ActionResult<dynamic>> Store(JsonObject data)
         {
             JsonReturn objReturn = new JsonReturn();
-
             try
             {
                 objReturn.Result = await _linksService.Create(Globals.JsonData(data));
-
-                objReturn.Title = "Nuevo link";
-                objReturn.Message = "El nuevo link se ha creado exitosamente.";
+                objReturn.Success(SuccessMessage.REQUEST);
             }
-            catch (AppException exception)
+            catch (AppException appEx)
             {
-                objReturn.Exception(exception);
+                objReturn.Exception(appEx);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                objReturn.Exception(ExceptionMessage.RawException(exception));
+                objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return objReturn.build();
+            return Ok(objReturn.build());
         }
 
         [HttpPost("Details")]
         public async Task<ActionResult<dynamic>> Details(JsonObject data)
         {
             JsonReturn objReturn = new JsonReturn();
-
             try
             {
                 string id       = Globals.ParseGuid(Globals.JsonData(data).idLink);
-                string fields   = "AlmacenamientoCredenciales,BuscarRecursos,CreadoPor,IdExterno,IdInstitucionUser,IdLink,Institucion,IsFetchHistorical,LastAccessedFecha,LinkCreatedFecha,LinkEstatusName,ModoAcceso,TasaActualizacion,Vencimiento";
+                string fields   = "IdLink,AlmacenamientoCredenciales,BuscarRecursos,CreadoFecha,CreadoPor,IdExterno,IdUsuarioInstitucion,Institucion,LinkEstatus,LinkVencimiento,ModoAcceso,TasaActualizacion,UltimoAccesoFecha";
 
                 var objRaw = await _linksService.FindSelectorById(id, fields);
                 var objModel = new
                 {
-                    //AlmacenamientoCredenciales  = objRaw.AlmacenamientoCredenciales,
-                    //BuscarRecursos              = objRaw.BuscarRecursos,
-                    //CreadoPor                   = objRaw.CreadoPor,
-                    //IdExterno                   = objRaw.IdExterno,
-                    //IdInstitucionUser           = objRaw.IdInstitucionUser,
-                    //IdLink                      = objRaw.IdLink,
-                    //Institucion                 = objRaw.Institucion,
-                    //IsFetchHistorical           = objRaw.IsFetchHistorical,
-                    //LastAccessedFecha           = objRaw.LastAccessedFecha,
-                    //LinkCreatedFecha            = objRaw.LinkCreatedFecha,
-                    //LinkEstatusName             = objRaw.LinkEstatusName,
-                    //ModoAcceso                  = objRaw.ModoAcceso,
-                    //TasaActualizacion           = objRaw.TasaActualizacion,
-                    //Vencimiento                 = objRaw.Vencimiento,
+                    IdLink                      = objRaw.IdLink,
+                    AlmacenamientoCredenciales  = objRaw.AlmacenamientoCredenciales,
+                    BuscarRecursos              = objRaw.BuscarRecursos,
+                    CreadoFecha                 = objRaw.CreadoFecha,
+                    CreadoPor                   = objRaw.CreadoPor,
+                    IdExterno                   = objRaw.IdExterno,
+                    IdUsuarioInstitucion        = objRaw.IdUsuarioInstitucion,
+                    Institucion                 = objRaw.Institucion,
+                    LinkEstatus                 = objRaw.LinkEstatus,
+                    LinkVencimiento             = objRaw.LinkVencimiento,
+                    ModoAcceso                  = objRaw.ModoAcceso,
+                    TasaActualizacion           = objRaw.TasaActualizacion,
+                    UltimoAccesoFecha           = objRaw.UltimoAccesoFecha,
                 };
 
                 objReturn.Result = objModel;
-
                 objReturn.Success(SuccessMessage.REQUEST);
             }
-            catch (AppException exception)
+            catch (AppException appEx)
             {
-                objReturn.Exception(exception);
+                objReturn.Exception(appEx);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                objReturn.Exception(ExceptionMessage.RawException(exception));
+                objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return objReturn.build();
+            return Ok(objReturn.build());
         }
 
         [HttpPost("Update")]
         public async Task<ActionResult<dynamic>> Update(JsonObject data)
         {
             JsonReturn objReturn = new JsonReturn();
-
             try
             {
                 objReturn.Result = await _linksService.Update(Globals.JsonData(data), User);
-
-                objReturn.Title = "Actualizado";
-                objReturn.Message = "El link se ha actualizado exitosamente.";
+                objReturn.Success(SuccessMessage.REQUEST);
             }
-            catch (AppException exception)
+            catch (AppException appEx)
             {
-                objReturn.Exception(exception);
+                objReturn.Exception(appEx);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                objReturn.Exception(ExceptionMessage.RawException(exception));
+                objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return objReturn.build();
+            return Ok(objReturn.build());
         }
 
         [HttpPost("Delete")]
         public async Task<ActionResult<dynamic>> Delete(JsonObject data)
         {
             JsonReturn objReturn = new JsonReturn();
-
             try
             {
                 objReturn.Result = await _linksService.Delete(Globals.JsonData(data), User);
-
-                objReturn.Title = "Eliminado";
-                objReturn.Message = "El link se ha eliminado exitosamente.";
+                objReturn.Success(SuccessMessage.REQUEST);
             }
-            catch (AppException exception)
+            catch (AppException appEx)
             {
-                objReturn.Exception(exception);
+                objReturn.Exception(appEx);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                objReturn.Exception(ExceptionMessage.RawException(exception));
+                objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return objReturn.build();
+            return Ok(objReturn.build());
         }
     }
 }

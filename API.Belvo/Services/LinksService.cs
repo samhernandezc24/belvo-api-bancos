@@ -261,6 +261,7 @@ namespace API.Belvo.Services
                 await _context.SaveChangesAsync();
                 objTransaction.Commit();
             }
+
             catch (Exception ex)
             {
                 objTransaction.Rollback();
