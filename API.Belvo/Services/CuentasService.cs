@@ -5,7 +5,6 @@ using API.Belvo.Persistence;
 using API.Belvo.ViewModels;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using iTextSharp.text.html.simpleparser;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Workcube.Interfaces;
