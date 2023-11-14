@@ -1,5 +1,4 @@
 ﻿using API.Belvo.Libraries;
-using API.Belvo.Models;
 using API.Belvo.Persistence;
 using API.Belvo.ViewModels;
 using Newtonsoft.Json;
