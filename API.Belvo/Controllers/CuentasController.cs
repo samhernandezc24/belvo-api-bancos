@@ -20,13 +20,16 @@ namespace API.Belvo.Controllers
         public async Task<ActionResult<dynamic>> Index()
         {
             JsonReturn objReturn = new JsonReturn();
+
             try
             {
-                var lstCuentas = await _cuentasService.List();
+                var lstInstituciones    = await BelvoService.InstitutionsList();
+                var lstUsuarios         = await _cuentasService.UsuariosList();
 
                 objReturn.Result = new
                 {
-                    cuentas = lstCuentas,
+                    instituciones   = lstInstituciones,
+                    usuarios        = lstUsuarios,
                 };
 
                 objReturn.Success(SuccessMessage.REQUEST);
@@ -47,9 +50,38 @@ namespace API.Belvo.Controllers
         public async Task<ActionResult<dynamic>> List(JsonObject data)
         {
             JsonReturn objReturn = new JsonReturn();
+
             try
             {
                 objReturn.Result = await _cuentasService.DataSource(Globals.JsonData(data));
+                objReturn.Success(SuccessMessage.REQUEST);
+            }
+            catch (AppException appEx)
+            {
+                objReturn.Exception(appEx);
+            }
+            catch (Exception ex)
+            {
+                objReturn.Exception(ExceptionMessage.RawException(ex));
+            }
+
+            return Ok(objReturn.build());
+        }
+
+        [HttpPost("Create")]
+        public async Task<ActionResult<dynamic>> Create(JsonObject data)
+        {
+            JsonReturn objReturn = new JsonReturn();
+
+            try
+            {
+                var lstInstituciones = await BelvoService.InstitutionsList();
+
+                objReturn.Result = new
+                {
+                    instituciones = lstInstituciones,
+                };
+
                 objReturn.Success(SuccessMessage.REQUEST);
             }
             catch (AppException appEx)
@@ -68,10 +100,13 @@ namespace API.Belvo.Controllers
         public async Task<ActionResult<dynamic>> Store(JsonObject data)
         {
             JsonReturn objReturn = new JsonReturn();
+
             try
             {
-                objReturn.Result = await _cuentasService.Create(Globals.JsonData(data));
-                objReturn.Success(SuccessMessage.REQUEST);
+                await _cuentasService.Create(Globals.JsonData(data), null);
+
+                objReturn.Title     = "Cuenta Creada";
+                objReturn.Message   = "La nueva cuenta se ha creado exitosamente.";
             }
             catch (AppException appEx)
             {
@@ -89,12 +124,13 @@ namespace API.Belvo.Controllers
         public async Task<ActionResult<dynamic>> Details(JsonObject data)
         {
             JsonReturn objReturn = new JsonReturn();
+
             try
             {
-                string id = Globals.ParseGuid(Globals.JsonData(data).idCuenta);
-                string fields = "CreadoFecha,CuentaAgencia,CuentaCategoria,CuentaIdentificacionInterna,CuentaIdentificacionPublicaNombre,CuentaIdentificacionPublicaValor," +
-                                "CuentaNombre,CuentaNumero,CuentaTipo,CuentaTipoSaldo,IdCuenta,IdCuentaBelvo,IdLink,IdProductoBancario,InstitucionCodigo,InstitucionNombre" +
-                                "InstitucionTipo,MonedaCodigo,RecoleccionFecha,SaldoActual,SaldoDisponible,UltimoAccesoFecha";
+                string id       = Globals.ParseGuid(Globals.JsonData(data).idCuenta);
+                string fields   = "CreadoFecha,CuentaAgencia,CuentaCategoria,CuentaIdentificacionInterna,CuentaIdentificacionPublicaNombre,CuentaIdentificacionPublicaValor," +
+                                  "CuentaNombre,CuentaNumero,CuentaTipo,CuentaTipoSaldo,IdCuenta,IdLink,IdProductoBancario,InstitucionCodigo,InstitucionNombre" +
+                                  "InstitucionTipo,MonedaCodigo,RecoleccionFecha,SaldoActual,SaldoDisponible,UltimoAccesoFecha";
 
                 var objRaw = await _cuentasService.FindSelectorById(id, fields);
                 var objModel = new
@@ -110,7 +146,6 @@ namespace API.Belvo.Controllers
                     CuentaTipo                          = objRaw.CuentaTipo,
                     CuentaTipoSaldo                     = objRaw.CuentaTipoSaldo,
                     IdCuenta                            = objRaw.IdCuenta,
-                    IdCuentaBelvo                       = objRaw.IdCuentaBelvo,
                     IdLink                              = objRaw.IdLink,
                     IdProductoBancario                  = objRaw.IdProductoBancario,
                     InstitucionCodigo                   = objRaw.InstitucionCodigo,
@@ -142,10 +177,14 @@ namespace API.Belvo.Controllers
         public async Task<ActionResult<dynamic>> Update(JsonObject data)
         {
             JsonReturn objReturn = new JsonReturn();
+
             try
             {
                 objReturn.Result = await _cuentasService.Update(Globals.JsonData(data), User);
-                objReturn.Success(SuccessMessage.REQUEST);
+
+
+                objReturn.Title     = "Cuenta Actualizada";
+                objReturn.Message   = "La cuenta se ha actualizado exitosamente.";
             }
             catch (AppException appEx)
             {
@@ -163,10 +202,13 @@ namespace API.Belvo.Controllers
         public async Task<ActionResult<dynamic>> Delete(JsonObject data)
         {
             JsonReturn objReturn = new JsonReturn();
+
             try
             {
                 objReturn.Result = await _cuentasService.Delete(Globals.JsonData(data), User);
-                objReturn.Success(SuccessMessage.REQUEST);
+
+                objReturn.Title     = "Cuenta Eliminada";
+                objReturn.Message   = "La cuenta se ha eliminado exitosamente.";
             }
             catch (AppException appEx)
             {

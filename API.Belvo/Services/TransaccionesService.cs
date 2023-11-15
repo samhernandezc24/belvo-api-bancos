@@ -35,7 +35,7 @@ namespace API.Belvo.Services
             {
                 Transaccion objModel = new Transaccion
                 {
-                    IdTransaccion                       = Guid.NewGuid().ToString(),
+                    IdTransaccion                       = data.id,
                     IdCuenta                            = data.account?.id              ?? "",
                     IdCuentaProductoBancario            = data.account?.bank_product_id ?? "",
                     IdLink                              = data.account?.link            ?? "",
@@ -47,17 +47,16 @@ namespace API.Belvo.Services
                     CreadoFecha                         = data.created_at,
                     TarjetaCreditoFacturaMonto          = data.credit_card_data?.bill_amount         ?? 0,
                     TarjetaCreditoFacturaNombre         = data.credit_card_data?.bill_name           ?? "",
-                    TarjetaCreditoFacturaEstatus        = data.credit_card_data?.bill_status         ?? "",
+                    TarjetaCreditoFacturaEstatusName    = data.credit_card_data?.bill_status         ?? "",
                     TarjetaCreditoRecoleccionFecha      = data.credit_card_data?.collected_at        ?? null,
                     TarjetaCreditoTotalFacturaAnterior  = Globals.ParseDecimalNull(data.credit_card_data?.previous_bill_total ?? "0.00"),
                     MonedaCodigo                        = data.currency,
                     TransaccionDescripcion              = data.description,
-                    IdTransaccionBelvo                  = data.id,
                     TransaccionIdentificacionInterna    = data.internal_identification,
                     ComercianteNombre                   = data.merchant?.merchant_name ?? "",
                     TransaccionObservaciones            = data.observations,
                     TransaccionReferencia               = data.reference,
-                    TransaccionEstatus                  = data.status,
+                    TransaccionEstatusName              = data.status,
                     TransaccionSubCategoria             = data.subcategory,
                     TransaccionTipo                     = data.type,
                     TransaccionValorFecha               = data.value_date,
@@ -252,17 +251,16 @@ namespace API.Belvo.Services
                 objModel.CreadoFecha                        = data.created_at;
                 objModel.TarjetaCreditoFacturaMonto         = data.credit_card_data?.bill_amount ?? 0;
                 objModel.TarjetaCreditoFacturaNombre        = data.credit_card_data?.bill_name ?? "";
-                objModel.TarjetaCreditoFacturaEstatus       = data.credit_card_data?.bill_status ?? "";
+                objModel.TarjetaCreditoFacturaEstatusName   = data.credit_card_data?.bill_status ?? "";
                 objModel.TarjetaCreditoRecoleccionFecha     = data.credit_card_data?.collected_at ?? null;
                 objModel.TarjetaCreditoTotalFacturaAnterior = Globals.ParseDecimalNull(data.credit_card_data?.previous_bill_total ?? "0.00");
                 objModel.MonedaCodigo                       = data.currency;
                 objModel.TransaccionDescripcion             = data.description;
-                objModel.IdTransaccionBelvo                 = data.id;
                 objModel.TransaccionIdentificacionInterna   = data.internal_identification;
                 objModel.ComercianteNombre                  = data.merchant?.merchant_name ?? "";
                 objModel.TransaccionObservaciones           = data.observations;
                 objModel.TransaccionReferencia              = data.reference;
-                objModel.TransaccionEstatus                 = data.status;
+                objModel.TransaccionEstatusName             = data.status;
                 objModel.TransaccionSubCategoria            = data.subcategory;
                 objModel.TransaccionTipo                    = data.type;
                 objModel.TransaccionValorFecha              = data.value_date;

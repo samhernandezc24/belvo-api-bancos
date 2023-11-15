@@ -36,7 +36,7 @@ namespace API.Belvo.Services
             {
                 Cuenta objModel = new Cuenta
                 {
-                    IdCuenta                            = Guid.NewGuid().ToString(),
+                    IdCuenta                            = data.id,
                     CuentaAgencia                       = data.agency,
                     SaldoDisponible                     = data.balance_available,
                     SaldoActual                         = data.balance_current,
@@ -62,7 +62,6 @@ namespace API.Belvo.Services
                     FondosPorcentaje                    = data.funds_data?.percentage   ?? 0,
                     FondosIdentificacionPublicaJson     = JsonConvert.SerializeObject(data.funds_data?.public_identifications ?? new List<IdentificacionPublica>()),
                     FondosTipo                          = data.funds_data?.type ?? "",
-                    IdCuentaBelvo                       = data.id,
                     InstitucionNombre                   = data.institution_name,
                     InstitucionTipo                     = data.institution_type,
                     InstitucionCodigo                   = data.institution_code,
@@ -266,6 +265,41 @@ namespace API.Belvo.Services
             return cuenta ?? throw new ArgumentException($"No se encontró la cuenta con el Id: {id} o el campo especificado '{fields}' no es válido en la búsqueda.");
         }
 
+        public async Task<List<dynamic>> UsuariosList()
+        {
+            try
+            {
+                var lstUsuarios = await _context.Cuentas
+                    .AsNoTracking()
+                    .Select(x => new
+                    {
+                        IdCreatedUser   = x.IdCreatedUser,
+                        CreatedUserName = x.CreatedUserName,
+                        IdUpdatedUser   = x.IdUpdatedUser,
+                        UpdatedUserName = x.UpdatedUserName,
+                    })
+                    .Distinct()
+                    .ToListAsync();
+
+                var rows = lstUsuarios.SelectMany(x => new[]
+                {
+                    new { Id = x.IdCreatedUser, NombreCompleto = x.CreatedUserName },
+                    new { Id = x.IdUpdatedUser, NombreCompleto = x.UpdatedUserName },
+                })
+                .GroupBy(x => x.Id)
+                .Select(x => x.First())
+                .OrderBy(x => x.NombreCompleto)
+                .ToList<dynamic>();
+
+                return rows;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(String.Format("Error en UsuariosList: {0}", ex.Message));
+                return new List<dynamic>();
+            }
+        }
+
         public Task<byte[]> Reporte(dynamic data)
         {
             throw new NotImplementedException();
@@ -304,7 +338,6 @@ namespace API.Belvo.Services
                 objModel.FondosPorcentaje                   = data.funds_data?.percentage   ?? 0;
                 objModel.FondosIdentificacionPublicaJson    = JsonConvert.SerializeObject(data.funds_data?.public_identifications ?? new List<IdentificacionPublica>());
                 objModel.FondosTipo                         = data.funds_data?.type ?? "";
-                objModel.IdCuentaBelvo                      = data.id;
                 objModel.InstitucionNombre                  = data.institution_name;
                 objModel.InstitucionTipo                    = data.institution_type;
                 objModel.InstitucionCodigo                  = data.institution_code;

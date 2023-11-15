@@ -12,8 +12,8 @@
     {
         public int id { get; set; }
         public string name { get; set; }
-        public string type { get; set; }
         public string code { get; set; }
+        public string type { get; set; }
         public string website { get; set; }
         public string display_name { get; set; }
         public string country_code { get; set; }
@@ -30,6 +30,7 @@
         public object openbanking_information { get; set; }
     }
 
+    // C
     public class CampoFormulario
     {
         public string name { get; set; }
@@ -47,6 +48,7 @@
         public string description { get; set; }
     }
 
+    // V
     public class Valor
     {
         public string code { get; set; }

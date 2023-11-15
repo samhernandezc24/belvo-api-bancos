@@ -3,6 +3,12 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# App Settings not included because it is per user
+appsettings.json
+
+# Docker file not included because it is per user
+Dockerfile
+
 # User-specific files
 *.rsuser
 *.suo

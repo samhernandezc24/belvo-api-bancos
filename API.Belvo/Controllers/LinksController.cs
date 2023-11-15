@@ -20,6 +20,7 @@ namespace API.Belvo.Controllers
         public async Task<ActionResult<dynamic>> Index()
         {
             JsonReturn objReturn = new JsonReturn();
+
             try
             {
                 var lstLinks = await _linksService.List();
@@ -47,6 +48,7 @@ namespace API.Belvo.Controllers
         public async Task<ActionResult<dynamic>> List(JsonObject data)
         {
             JsonReturn objReturn = new JsonReturn();
+
             try
             {
                 objReturn.Result = await _linksService.DataSource(Globals.JsonData(data));
@@ -68,10 +70,13 @@ namespace API.Belvo.Controllers
         public async Task<ActionResult<dynamic>> Store(JsonObject data)
         {
             JsonReturn objReturn = new JsonReturn();
+
             try
             {
                 objReturn.Result = await _linksService.Create(Globals.JsonData(data));
-                objReturn.Success(SuccessMessage.REQUEST);
+                
+                objReturn.Title     = "Link Creado";
+                objReturn.Message   = "El nuevo link se ha generado exitosamente.";
             }
             catch (AppException appEx)
             {
@@ -89,23 +94,23 @@ namespace API.Belvo.Controllers
         public async Task<ActionResult<dynamic>> Details(JsonObject data)
         {
             JsonReturn objReturn = new JsonReturn();
+
             try
             {
                 string id       = Globals.ParseGuid(Globals.JsonData(data).idLink);
-                string fields   = "IdLink,AlmacenamientoCredenciales,BuscarRecursos,CreadoFecha,CreadoPor,IdExterno,IdUsuarioInstitucion,Institucion,LinkEstatus,LinkVencimiento,ModoAcceso,TasaActualizacion,UltimoAccesoFecha";
+                string fields   = "AlmacenamientoCredenciales,BuscarRecursos,CreadoFecha,CreadoPor,IdLink,IdUsuarioInstitucion,Institucion,LinkEstatus,LinkVencimiento,ModoAcceso,TasaActualizacion,UltimoAccesoFecha";
 
                 var objRaw = await _linksService.FindSelectorById(id, fields);
                 var objModel = new
                 {
-                    IdLink                      = objRaw.IdLink,
                     AlmacenamientoCredenciales  = objRaw.AlmacenamientoCredenciales,
                     BuscarRecursos              = objRaw.BuscarRecursos,
                     CreadoFecha                 = objRaw.CreadoFecha,
                     CreadoPor                   = objRaw.CreadoPor,
-                    IdExterno                   = objRaw.IdExterno,
+                    IdLink                      = objRaw.IdLink,
                     IdUsuarioInstitucion        = objRaw.IdUsuarioInstitucion,
                     Institucion                 = objRaw.Institucion,
-                    LinkEstatus                 = objRaw.LinkEstatus,
+                    LinkEstatusName             = objRaw.LinkEstatusName,
                     LinkVencimiento             = objRaw.LinkVencimiento,
                     ModoAcceso                  = objRaw.ModoAcceso,
                     TasaActualizacion           = objRaw.TasaActualizacion,
@@ -134,7 +139,9 @@ namespace API.Belvo.Controllers
             try
             {
                 objReturn.Result = await _linksService.Update(Globals.JsonData(data), User);
-                objReturn.Success(SuccessMessage.REQUEST);
+                
+                objReturn.Title     = "Link Actualizado";
+                objReturn.Message   = "El link se ha actualizado exitosamente.";
             }
             catch (AppException appEx)
             {
@@ -155,7 +162,9 @@ namespace API.Belvo.Controllers
             try
             {
                 objReturn.Result = await _linksService.Delete(Globals.JsonData(data), User);
-                objReturn.Success(SuccessMessage.REQUEST);
+                
+                objReturn.Title     = "Link Eliminado";
+                objReturn.Message   = "El link se ha eliminado exitosamente.";
             }
             catch (AppException appEx)
             {

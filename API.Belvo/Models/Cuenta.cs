@@ -8,8 +8,9 @@ namespace API.Belvo.Models
     public class Cuenta : UserCreated
     {
         [Key]
-        public string IdCuenta { get; set; }            // GUID GENERADO POR WORKCUBE
-        public string IdCuentaBelvo { get; set; }       // ID GENERADO POR BELVO
+        public string IdCuenta { get; set; }            // GUID GENERADO POR BELVO HOMOLOGADO A WORKCUBE
+
+        public virtual Link Link { get; set; }
         public string IdLink { get; set; }              // ID GENERADO POR BELVO
 
         // Institucion [Institution]
@@ -19,8 +20,10 @@ namespace API.Belvo.Models
 
         public DateTime RecoleccionFecha { get; set; }
         public DateTime CreadoFecha { get; set; }
-        public string CuentaNombre { get; set; }
+        public string CuentaCategoria { get; set; }
+        public string CuentaTipoSaldo { get; set; }
         public string CuentaTipo { get; set; }
+        public string CuentaNombre { get; set; }
         public string CuentaAgencia { get; set; }
         public string CuentaNumero { get; set; }
 
@@ -30,64 +33,60 @@ namespace API.Belvo.Models
         [Column(TypeName = "decimal(30, 2)")]
         public decimal SaldoDisponible { get; set; }
 
-        public string CuentaCategoria { get; set; }
         public string MonedaCodigo { get; set; }
-        public string CuentaTipoSaldo { get; set; }
-        public string IdProductoBancario { get; set; }
-        public DateTime? UltimoAccesoFecha { get; set; }
-        public string CuentaIdentificacionInterna { get; set; }
         public string CuentaIdentificacionPublicaNombre { get; set; }
         public string CuentaIdentificacionPublicaValor { get; set; }
+        public DateTime? UltimoAccesoFecha { get; set; }
+
+        // DatosCredito [CreditData]
+        [Column(TypeName = "decimal(30, 2)")]
+        public decimal? CreditoLimite { get; set; }
+        public DateTime? CreditoRecoleccionFecha { get; set; }
+        public string CreditoCorteFecha { get; set; }
+        public string CreditoProximoPagoFecha { get; set; }
+        [Column(TypeName = "decimal(30, 2)")]
+        public decimal? CreditoPagoMinimo { get; set; }
+        [Column(TypeName = "decimal(30, 2)")]
+        public decimal? CreditoPagoSinInteres { get; set; }
+        [Column(TypeName = "decimal(30, 2)")]
+        public decimal? CreditoTasaInteres { get; set; }
+        [Column(TypeName = "decimal(30, 2)")]
+        public decimal? CreditoPagoMensual { get; set; }
+        public string CreditoUltimoPagoFecha { get; set; }
+        [Column(TypeName = "decimal(30, 2)")]
+        public decimal? CreditoSaldoUltimoPeriodo { get; set; }
 
         // DatosPrestamo [LoanData]
-        // DatosPrestamo [LoanData] => Tarifa [Fees]
-        public string PrestamoTarifaJson { get; set; }
-
-        public string PrestamoTipo { get; set; }
+        public DateTime? PrestamoRecoleccionFecha { get; set; }
+        [Column(TypeName = "decimal(30, 2)")]
+        public decimal? PrestamoMontoContrato { get; set; }
         [Column(TypeName = "decimal(30, 2)")]
         public decimal? PrestamoPrincipal { get; set; }
-        public string PrestamoDiaCorte { get; set; }
-        public string PrestamoCorteFecha { get; set; }
-        public DateTime? PrestamoRecoleccionFecha { get; set; }
+        public string PrestamoTipo { get; set; }
+        public string PrestamoDiaPago { get; set; }
+        [Column(TypeName = "decimal(30, 2)")]
+        public decimal? PrestamoPrincipalPendientePago { get; set; }
+        [Column(TypeName = "decimal(30, 2)")]
+        public decimal? PrestamoSaldoPendientePago { get; set; }
+        [Column(TypeName = "decimal(30, 2)")]
+        public decimal? PrestamoPagoMensual { get; set; }
 
         // DatosPrestamo [LoanData] => TasaInteres [InterestRates]
         public string PrestamoTasaInteresJson { get; set; }
 
-        [Column(TypeName = "decimal(30, 2)")]
-        public decimal? PrestamoMontoContrato { get; set; }
-        public string PrestamoNumeroContrato { get; set; }
-        public string PrestamoContratoInicioFecha { get; set; }
-        public string PrestamoContratoFinalizacionFecha { get; set; }
-        [Column(TypeName = "decimal(30, 2)")]
-        public decimal? PrestamoPagoMensual { get; set; }
-        public string PrestamoDiaPago { get; set; }
-        public string PrestamoUltimoPagoFecha { get; set; }
-        [Column(TypeName = "decimal(30, 2)")]
-        public decimal? PrestamoSaldoPendientePago { get; set; }
-        [Column(TypeName = "decimal(30, 2)")]
-        public decimal? PrestamoPrincipalPendientePago { get; set; }
+        // DatosPrestamo [LoanData] => Tarifa [Fees]
+        public string PrestamoTarifaJson { get; set; }
+
         public string PrestamoNumeroCuotasTotal { get; set; }
         public string PrestamoNumeroCuotasPendientes { get; set; }
+        public string PrestamoContratoInicioFecha { get; set; }
+        public string PrestamoContratoFinalizacionFecha { get; set; }
+        public string PrestamoNumeroContrato { get; set; }
+        public string PrestamoDiaCorte { get; set; }
+        public string PrestamoCorteFecha { get; set; }
+        public string PrestamoUltimoPagoFecha { get; set; }
         [Column(TypeName = "decimal(30, 2)")]
         public decimal? PrestamoPagoSinInteres { get; set; }
-
-        // DatosCredito [CreditData]
-        public DateTime? CreditoRecoleccionFecha { get; set; }
-        [Column(TypeName = "decimal(30, 2)")]
-        public decimal? CreditoLimite { get; set; }
-        public string CreditoCorteFecha { get; set; }
-        [Column(TypeName = "decimal(30, 2)")]
-        public decimal? CreditoTasaInteres { get; set; }
-        [Column(TypeName = "decimal(30, 2)")]
-        public decimal? CreditoPagoMinimo { get; set; }
-        [Column(TypeName = "decimal(30, 2)")]
-        public decimal? CreditoPagoMensual { get; set; }
-        public string CreditoUltimoPagoFecha { get; set; }
-        public string CreditoProximoPagoFecha { get; set; }
-        [Column(TypeName = "decimal(30, 2)")]
-        public decimal? CreditoSaldoUltimoPeriodo { get; set; }
-        [Column(TypeName = "decimal(30, 2)")]
-        public decimal? CreditoPagoSinInteres { get; set; }
 
         // DatosFondo [FundsData]
         public DateTime? FondosRecoleccionFecha { get; set; }
@@ -110,5 +109,10 @@ namespace API.Belvo.Models
         [Column(TypeName = "decimal(30, 2)")]
         public decimal? CuentasPorCobrarAnticipado { get; set; }
         public DateTime? CuentasPorCobrarRecoleccionFecha { get; set; }
+
+        public string IdProductoBancario { get; set; }
+        public string CuentaIdentificacionInterna { get; set; }
+
+        public virtual List<Transaccion> Transacciones { get; set; }
     }
 }

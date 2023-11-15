@@ -1,9 +1,9 @@
-using System.Globalization;
 using API.Belvo.Persistence;
 using API.Belvo.Services;
 using API.Belvo.Utils;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using Workcube.JwtAutentication;
 
 var builder = WebApplication.CreateBuilder(args);

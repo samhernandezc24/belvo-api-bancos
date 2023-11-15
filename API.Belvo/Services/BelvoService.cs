@@ -1,21 +1,15 @@
 ﻿using API.Belvo.Libraries;
-using API.Belvo.Persistence;
 using API.Belvo.ViewModels;
+using API.Belvo.ViewModels.Generic;
+using API.Belvo.ViewModels.Requests;
 using Newtonsoft.Json;
+using Workcube.Libraries;
 
 namespace API.Belvo.Services
 {
     public class BelvoService
     {
-        static string belvoApiUrl = "https://sandbox.belvo.com/";
-
-        public readonly Context _context;
-        public static IEnumerable<dynamic> lstHeaders = new List<dynamic>().Append(new { name = "Authorization", value = "Basic N2E0NTUyNjUtYjVmNS00NmJkLTllNjUtYmVhYTg4NTg1MWU1OkRAeWxtYSNFaHpyVDM0bzUxVXZ6czJqQlVpQzhvcUEwTGxRZUN6bHlfWFU5alI4RkE0OV9kMVB0ZXJVOFVHTEM=" });
-
-        public BelvoService(Context context)
-        {
-            _context = context;
-        }
+        public BelvoService() {}
 
         // A
         #region ACCOUNTS
@@ -29,21 +23,19 @@ namespace API.Belvo.Services
         | página.
         |
         */
-        public static async Task<dynamic> AccountsList()
+        public static async Task<List<CuentaListResult>> AccountsList()
         {
-            try
+            WebManagerResultView result = await WebServiceManager.Get(GlobalVariables.belvoApiUrl + "api/accounts", GlobalVariables.lstHeaders);
+
+            if (!result.isSuccessful)
             {
-                var result = await WebServiceManager.Get(belvoApiUrl + "api/accounts", lstHeaders);
-                return result;
+                var lstMessage = JsonConvert.DeserializeObject<List<dynamic>>(result.content);
+                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", Globals.ToString(lstMessage[0].code), Globals.ToString(lstMessage[1].message)));
             }
-            catch (HttpRequestException httpEx)
-            {
-                throw new ArgumentException("Ha ocurrido un error en la petición HTTP: " + httpEx.Message, httpEx);
-            }
-            catch (Exception ex)
-            {
-                throw new ArgumentException("Ha ocurrido un error inesperado: " + ex.Message, ex);
-            }
+
+            BelvoCuentaViewModel objAccountData = JsonConvert.DeserializeObject<BelvoCuentaViewModel>(result.content);
+
+            return objAccountData.results;
         }
 
         /*
@@ -54,26 +46,19 @@ namespace API.Belvo.Services
         | Se recupera las "Cuentas" de un "Link" existente.
         |
         */
-        public static async Task<CuentaListResult> AccountsRetrieveForLink(dynamic objBodyParams)
+        public static async Task<CuentaListResult> AccountsRetrieveForLink(ReqStoreAccount objBodyParams)
         {
-            try
-            {
-                var result = await WebServiceManager.Post(belvoApiUrl + "api/accounts", lstHeaders, objBodyParams);
-                
-                if (!result.isSuccessful) { throw new ArgumentException($"{result.statusCode} - No se pudieron obtener las cuentas para su guardado."); }
+            WebManagerResultView result = await WebServiceManager.Post(GlobalVariables.belvoApiUrl + "api/accounts", GlobalVariables.lstHeaders, objBodyParams);
 
-                CuentaListResult accountData = JsonConvert.DeserializeObject<CuentaListResult>(result.content);
+            if (!result.isSuccessful)
+            {
+                List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
+                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
+            }
 
-                return accountData;
-            }
-            catch (HttpRequestException httpEx)
-            {
-                throw new ArgumentException("Ha ocurrido un error en la petición HTTP: " + httpEx.Message, httpEx);
-            }
-            catch (Exception ex)
-            {
-                throw new ArgumentException("Ha ocurrido un error inesperado: " + ex.Message, ex);
-            }
+            CuentaListResult objAccountData = JsonConvert.DeserializeObject<CuentaListResult>(result.content);
+
+            return objAccountData;
         }
 
         /*
@@ -85,12 +70,17 @@ namespace API.Belvo.Services
         | detuvo porque la institución requería un token MFA.
         |
         */
-        public static async Task<dynamic> AccountsCompleteRequest(dynamic objBodyParams)
+        public static async Task<CuentaListResult> AccountsCompleteRequest(ReqCompleteRequestAccounts objBodyParams)
         {
             try
             {
-                var result = await WebServiceManager.Patch(belvoApiUrl + "api/accounts", lstHeaders, objBodyParams);
-                return result;
+                var result = await WebServiceManager.Patch(GlobalVariables.belvoApiUrl + "api/accounts", GlobalVariables.lstHeaders, objBodyParams);
+
+                if (!result.isSuccessful) { throw new ArgumentException($"No se ha podido completar la operación para reanudar una sesión de recuperación para la cuenta. Código de Estado: {result.statusCode}"); }
+
+                CuentaListResult objAccountData = JsonConvert.DeserializeObject<CuentaListResult>(result.content);
+
+                return objAccountData;
             }
             catch (HttpRequestException httpEx)
             {
@@ -110,21 +100,19 @@ namespace API.Belvo.Services
         | Obtiene los detalles de una "Cuenta" específica.
         |
         */
-        public static async Task<dynamic> AccountsDetails(string Id)
+        public static async Task<CuentaListResult> AccountsDetails(string Id)
         {
-            try
+            WebManagerResultView result = await WebServiceManager.Get(GlobalVariables.belvoApiUrl + "api/accounts/" + Id, GlobalVariables.lstHeaders);
+
+            if (!result.isSuccessful)
             {
-                var result = await WebServiceManager.Get(belvoApiUrl + "api/accounts/" + Id, lstHeaders);
-                return result;
+                List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
+                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
             }
-            catch (HttpRequestException httpEx)
-            {
-                throw new ArgumentException("Ha ocurrido un error en la petición HTTP: " + httpEx.Message, httpEx);
-            }
-            catch (Exception ex)
-            {
-                throw new ArgumentException("Ha ocurrido un error inesperado: " + ex.Message, ex);
-            }
+
+            CuentaListResult objAccountData = JsonConvert.DeserializeObject<CuentaListResult>(result.content);
+
+            return objAccountData;
         }
 
         /*
@@ -140,7 +128,7 @@ namespace API.Belvo.Services
         {
             try
             {
-                var result = await WebServiceManager.Delete(belvoApiUrl + "api/accounts/" + Id, lstHeaders);
+                var result = await WebServiceManager.Delete(GlobalVariables.belvoApiUrl + "api/accounts/" + Id, GlobalVariables.lstHeaders);
                 return result;
             }
             catch (HttpRequestException httpEx)
@@ -166,26 +154,19 @@ namespace API.Belvo.Services
         | página.
         |
         */
-        public static async Task<dynamic> InstitutionsList()
+        public static async Task<List<InstitucionListResult>> InstitutionsList()
         {
-            try
-            {
-                var result = await WebServiceManager.Get(belvoApiUrl + "api/institutions", lstHeaders);
+            WebManagerResultView result = await WebServiceManager.Get(GlobalVariables.belvoApiUrl + "api/institutions", GlobalVariables.lstHeaders);
 
-                if (!result.isSuccessful) { throw new ArgumentException($"{result.statusCode} - No se pudieron obtener las instituciones."); }
-
-                BelvoInstitucionViewModel objInstitucionResult = JsonConvert.DeserializeObject<BelvoInstitucionViewModel>(result.content);
-
-                return objInstitucionResult.results.Where(x => x.type == "bank").ToList();
-            }
-            catch (HttpRequestException httpEx)
+            if (!result.isSuccessful)
             {
-                throw new ArgumentException("Ha ocurrido un error en la petición HTTP: " + httpEx.Message, httpEx);
+                List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
+                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
             }
-            catch (Exception ex)
-            {
-                throw new ArgumentException("Ha ocurrido un error inesperado: " + ex.Message, ex);
-            }
+
+            BelvoInstitucionViewModel objInstitutionData = JsonConvert.DeserializeObject<BelvoInstitucionViewModel>(result.content);
+
+            return objInstitutionData.results;
         }
 
         /*
@@ -196,21 +177,19 @@ namespace API.Belvo.Services
         | Obtiene los detalles de una "Institución" específica.
         |
         */
-        public static async Task<dynamic> InstitutionsDetails(string Id)
+        public static async Task<InstitucionListResult> InstitutionsDetails(string Id)
         {
-            try
+            WebManagerResultView result = await WebServiceManager.Get(GlobalVariables.belvoApiUrl + "api/institutions/" + Id, GlobalVariables.lstHeaders);
+
+            if (!result.isSuccessful)
             {
-                var result = await WebServiceManager.Get(belvoApiUrl + "api/institutions/" + Id, lstHeaders);
-                return result;
+                List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
+                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
             }
-            catch (HttpRequestException httpEx)
-            {
-                throw new ArgumentException("Ha ocurrido un error en la petición HTTP: " + httpEx.Message, httpEx);
-            }
-            catch (Exception ex)
-            {
-                throw new ArgumentException("Ha ocurrido un error inesperado: " + ex.Message, ex);
-            }
+
+            InstitucionListResult objInstitutionData = JsonConvert.DeserializeObject<InstitucionListResult>(result.content);
+
+            return objInstitutionData;
         }
         #endregion
 
@@ -226,26 +205,19 @@ namespace API.Belvo.Services
         | página.
         |
         */
-        public static async Task<dynamic> LinksList()
+        public static async Task<List<LinkListResult>> LinksList()
         {
-            try
-            {
-                var result = await WebServiceManager.Get(belvoApiUrl + "api/links", lstHeaders);
+            WebManagerResultView result = await WebServiceManager.Get(GlobalVariables.belvoApiUrl + "api/links", GlobalVariables.lstHeaders);
 
-                if (!result.isSuccessful) { throw new ArgumentException($"{result.statusCode} - No se pudieron obtener los links."); }
-
-                LinkListResult linkData = JsonConvert.DeserializeObject<LinkListResult>(result.content);
-
-                return linkData;
-            }
-            catch (HttpRequestException httpEx)
+            if (!result.isSuccessful)
             {
-                throw new ArgumentException("Ha ocurrido un error en la petición HTTP: " + httpEx.Message, httpEx);
+                List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
+                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
             }
-            catch (Exception ex)
-            {
-                throw new ArgumentException("Ha ocurrido un error inesperado: " + ex.Message, ex);
-            }
+
+            BelvoLinkViewModel objLinkData = JsonConvert.DeserializeObject<BelvoLinkViewModel>(result.content);
+
+            return objLinkData.results;
         }
 
         /*
@@ -256,26 +228,19 @@ namespace API.Belvo.Services
         | Se registra un nuevo "Link" con nuestra cuenta de Belvo.
         |
         */
-        public static async Task<LinkListResult> LinksNew(dynamic objBodyParams)
+        public static async Task<LinkListResult> LinksStore(ReqStoreLink objBodyParams)
         {
-            try
-            {
-                var result = await WebServiceManager.Post(belvoApiUrl + "api/links", lstHeaders, objBodyParams);
+            WebManagerResultView result = await WebServiceManager.Post(GlobalVariables.belvoApiUrl + "api/links", GlobalVariables.lstHeaders, objBodyParams);
 
-                if (!result.isSuccessful) { throw new ArgumentException($"{result.statusCode} - No se pudo guardar el link."); }
-
-                LinkListResult linkData = JsonConvert.DeserializeObject<LinkListResult>(result.content);
-
-                return linkData;
-            }
-            catch (HttpRequestException httpEx)
+            if (!result.isSuccessful)
             {
-                throw new ArgumentException("Ha ocurrido un error en la petición HTTP: " + httpEx.Message, httpEx);
+                List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
+                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
             }
-            catch (Exception ex)
-            {
-                throw new ArgumentException("Ha ocurrido un error inesperado: " + ex.Message, ex);
-            }
+
+            LinkListResult objLinkData = JsonConvert.DeserializeObject<LinkListResult>(result.content);
+
+            return objLinkData;
         }
 
        /*
@@ -287,12 +252,17 @@ namespace API.Belvo.Services
        | detuvo porque la institución requería un token MFA.
        |
        */
-        public static async Task<dynamic> LinksCompleteRequest(dynamic objBodyParams)
+        public static async Task<LinkListResult> LinksCompleteRequest(ReqCompleteRequestLinks objBodyParams)
         {
             try
             {
-                var result = await WebServiceManager.Patch(belvoApiUrl + "api/links", lstHeaders, objBodyParams);
-                return result;
+                var result = await WebServiceManager.Patch(GlobalVariables.belvoApiUrl + "api/links", GlobalVariables.lstHeaders, objBodyParams);
+
+                if (!result.isSuccessful) { throw new ArgumentException($"No se ha podido completar la operación de reanudación de sesión para el link. Código de Estado: {result.statusCode}"); }
+
+                LinkListResult objLinkData = JsonConvert.DeserializeObject<LinkListResult>(result.content);
+
+                return objLinkData;
             }
             catch (HttpRequestException httpEx)
             {
@@ -316,7 +286,7 @@ namespace API.Belvo.Services
         {
             try
             {
-                var result = await WebServiceManager.Get(belvoApiUrl + "api/links/" + Id, lstHeaders);
+                var result = await WebServiceManager.Get(GlobalVariables.belvoApiUrl + "api/links/" + Id, GlobalVariables.lstHeaders);
                 return result;
             }
             catch (HttpRequestException httpEx)
@@ -345,7 +315,7 @@ namespace API.Belvo.Services
         {
             try
             {
-                var result = await WebServiceManager.Patch(belvoApiUrl + "api/links/" + Id, lstHeaders, objBodyParams);
+                var result = await WebServiceManager.Patch(GlobalVariables.belvoApiUrl + "api/links/" + Id, GlobalVariables.lstHeaders, objBodyParams);
                 return result;
             }
             catch (HttpRequestException httpEx)
@@ -374,7 +344,7 @@ namespace API.Belvo.Services
         {
             try
             {
-                var result = await WebServiceManager.Put(belvoApiUrl + "api/links/" + Id, lstHeaders, objBodyParams);
+                var result = await WebServiceManager.Put(GlobalVariables.belvoApiUrl + "api/links/" + Id, GlobalVariables.lstHeaders, objBodyParams);
                 return result;
             }
             catch (HttpRequestException httpEx)
@@ -400,7 +370,7 @@ namespace API.Belvo.Services
         {
             try
             {
-                var result = await WebServiceManager.Delete(belvoApiUrl + "api/links/" + Id, lstHeaders);
+                var result = await WebServiceManager.Delete(GlobalVariables.belvoApiUrl + "api/links/" + Id, GlobalVariables.lstHeaders);
                 return result;
             }
             catch (HttpRequestException httpEx)
@@ -426,26 +396,19 @@ namespace API.Belvo.Services
         | página.
         |
         */
-        public static async Task<dynamic> TransactionsList(dynamic objQueryParams)
+        public static async Task<List<TransaccionListResult>> TransactionsList(ReqListTransaction objQueryParams)
         {
-            try
-            {
-                var result = await WebServiceManager.Get(belvoApiUrl + "api/transactions", lstHeaders, objQueryParams);
+            WebManagerResultView result = await WebServiceManager.Post(GlobalVariables.belvoApiUrl + "api/transactions", GlobalVariables.lstHeaders, objQueryParams);
 
-                if (!result.isSuccessful) { throw new ArgumentException($"{result.statusCode} - No se pudieron obtener las transacciones."); }
-
-                TransaccionListResult transactionData = JsonConvert.DeserializeObject<TransaccionListResult>(result.content);
-
-                return transactionData;
-            }
-            catch (HttpRequestException httpEx)
+            if (!result.isSuccessful)
             {
-                throw new ArgumentException("Ha ocurrido un error en la petición HTTP: " + httpEx.Message, httpEx);
+                List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
+                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
             }
-            catch (Exception ex)
-            {
-                throw new ArgumentException("Ha ocurrido un error inesperado: " + ex.Message, ex);
-            }
+
+            BelvoTransaccionViewModel objTransactionData = JsonConvert.DeserializeObject<BelvoTransaccionViewModel>(result.content);
+
+            return objTransactionData.results;
         }
 
         /*
@@ -461,7 +424,7 @@ namespace API.Belvo.Services
         {
             try
             {
-                var result = await WebServiceManager.Post(belvoApiUrl + "api/transactions", lstHeaders, objBodyParams);
+                var result = await WebServiceManager.Post(GlobalVariables.belvoApiUrl + "api/transactions", GlobalVariables.lstHeaders, objBodyParams);
 
                 if (!result.isSuccessful) { throw new ArgumentException($"{result.statusCode} - No se pudieron obtener las transacciones de la cuenta para su guardado."); }
 
@@ -492,7 +455,7 @@ namespace API.Belvo.Services
         {
             try
             {
-                var result = await WebServiceManager.Patch(belvoApiUrl + "api/transactions", lstHeaders, objBodyParams);
+                var result = await WebServiceManager.Patch(GlobalVariables.belvoApiUrl + "api/transactions", GlobalVariables.lstHeaders, objBodyParams);
                 return result;
             }
             catch (HttpRequestException httpEx)
@@ -517,7 +480,7 @@ namespace API.Belvo.Services
         {
             try
             {
-                var result = await WebServiceManager.Get(belvoApiUrl + "api/transactions/" + Id, lstHeaders);
+                var result = await WebServiceManager.Get(GlobalVariables.belvoApiUrl + "api/transactions/" + Id, GlobalVariables.lstHeaders);
                 return result;
             }
             catch (HttpRequestException httpEx)
@@ -542,7 +505,7 @@ namespace API.Belvo.Services
         {
             try
             {
-                var result = await WebServiceManager.Delete(belvoApiUrl + "api/transactions/" + Id, lstHeaders);
+                var result = await WebServiceManager.Delete(GlobalVariables.belvoApiUrl + "api/transactions/" + Id, GlobalVariables.lstHeaders);
                 return result;
             }
             catch (HttpRequestException httpEx)

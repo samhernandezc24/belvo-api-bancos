@@ -34,23 +34,24 @@ namespace API.Belvo.Services
             using var objTransaction = _context.Database.BeginTransaction();
             try
             {
+                var objUser = new ModelGetUser { Id = data.id, Nombre = "Admin Manager" };
+
                 Link objModel = new Link
                 {
-                    IdLink                      = Guid.NewGuid().ToString(),
+                    IdLink                      = data.id,
                     ModoAcceso                  = data.access_mode,
                     CreadoFecha                 = data.created_at,
                     CreadoPor                   = data.created_by,
                     AlmacenamientoCredenciales  = data.credentials_storage,
-                    IdExterno                   = data.external_id,
                     BuscarRecursos              = JsonConvert.SerializeObject(data.fetch_resources),
-                    IdLinkBelvo                 = data.id,
                     Institucion                 = data.institution,
                     IdUsuarioInstitucion        = data.institution_user_id,
                     UltimoAccesoFecha           = data.last_accessed_at,
                     TasaActualizacion           = data.refresh_rate,
                     LinkVencimiento             = data.stale_in,
-                    LinkEstatus                 = data.status,
+                    LinkEstatusName             = data.status,
                 };
+                objModel.SetCreated(objUser);
 
                 _context.Links.Add(objModel);
                 await _context.SaveChangesAsync();
@@ -90,7 +91,7 @@ namespace API.Belvo.Services
                 IdExterno                   = x.IdExterno,
                 IdUsuarioInstitucion        = x.IdUsuarioInstitucion,
                 Institucion                 = x.Institucion,
-                LinkEstatus                 = x.LinkEstatus,
+                LinkEstatusName             = x.LinkEstatusName,
                 LinkVencimiento             = x.LinkVencimiento,
                 ModoAcceso                  = x.ModoAcceso,
                 TasaActualizacion           = x.TasaActualizacion,
@@ -221,7 +222,7 @@ namespace API.Belvo.Services
 
         public async Task<List<dynamic>> List()
         {
-            return await _context.Links.Where(x => !x.Deleted).Select(x => new { x.IdExterno, x.Institucion, x.LinkEstatus } ).ToListAsync<dynamic>();
+            return await _context.Links.Where(x => !x.Deleted).Select(x => new { x.IdLink, x.Institucion, x.LinkEstatusName } ).ToListAsync<dynamic>();
         }
 
         public async Task<List<dynamic>> ListSelectorById(string id, string fields)
@@ -247,15 +248,13 @@ namespace API.Belvo.Services
                 objModel.CreadoFecha                 = data.created_at;
                 objModel.CreadoPor                   = data.created_by;
                 objModel.AlmacenamientoCredenciales  = data.credentials_storage;
-                objModel.IdExterno                   = data.external_id;
                 objModel.BuscarRecursos              = JsonConvert.SerializeObject(data.fetch_resources);
-                objModel.IdLinkBelvo                 = data.id;
                 objModel.Institucion                 = data.institution;
                 objModel.IdUsuarioInstitucion        = data.institution_user_id;
                 objModel.UltimoAccesoFecha           = data.last_accessed_at;
                 objModel.TasaActualizacion           = data.refresh_rate;
                 objModel.LinkVencimiento             = data.stale_in;
-                objModel.LinkEstatus                 = data.status;
+                objModel.LinkEstatusName             = data.status;
 
                 _context.Links.Update(objModel);
                 await _context.SaveChangesAsync();
