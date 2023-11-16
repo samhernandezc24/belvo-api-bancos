@@ -35,22 +35,20 @@ namespace API.Belvo.Services
 
             var objUser = new ModelGetUser { Id = data.id, Nombre = "Admin Manager" };
 
-            Link objModel = new Link
-            {
-                IdLink                      = data.id,
-                ModoAcceso                  = data.access_mode,
-                CreadoFecha                 = data.created_at,
-                CreadoPor                   = data.created_by,
-                AlmacenamientoCredenciales  = data.credentials_storage,
-                BuscarRecursos              = JsonConvert.SerializeObject(data.fetch_resources),
-                Institucion                 = data.institution,
-                IdUsuarioInstitucion        = data.institution_user_id,
-                UltimoAccesoFecha           = data.last_accessed_at,
-                TasaActualizacion           = data.refresh_rate,
-                LinkVencimiento             = data.stale_in,
-                LinkEstatusName             = data.status,
-            };
-
+            Link objModel                       = new Link();            
+            objModel.IdLink                     = data.id;
+            objModel.ModoAcceso                 = data.access_mode;
+            objModel.CreadoFecha                = data.created_at;
+            objModel.CreadoPor                  = data.created_by;
+            objModel.AlmacenamientoCredenciales = data.credentials_storage;
+            objModel.BuscarRecursos             = JsonConvert.SerializeObject(data.fetch_resources);
+            objModel.Institucion                = data.institution;
+            objModel.IdUsuarioInstitucion       = data.institution_user_id;
+            objModel.UltimoAccesoFecha          = data.last_accessed_at;
+            objModel.TasaActualizacion          = data.refresh_rate;
+            objModel.LinkVencimiento            = data.stale_in;
+            objModel.LinkEstatusName            = data.status;
+            
             objModel.SetCreated(objUser);
 
             _context.Links.Add(objModel);

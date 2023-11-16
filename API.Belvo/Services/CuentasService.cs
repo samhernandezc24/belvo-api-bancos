@@ -40,7 +40,7 @@ namespace API.Belvo.Services
                 institution         = Globals.ToString(data.institutionName),
                 password            = Globals.ToString(data.password),
                 stale_in            = "365d",
-                token               = "WK2023ERP",
+                token               = Globals.ToString(data.token),
                 username            = Globals.ToString(data.username),
             };
 
@@ -50,78 +50,77 @@ namespace API.Belvo.Services
             ReqStoreAccount objParamsAccount = new ReqStoreAccount
             {
                 link        = objModelLink.id,
-                token       = "WK2023ERP",
+                token       = Globals.ToString(data.token),
                 save_data   = true,
             };
 
             List<CuentaListResult> lstCuentas = await BelvoService.AccountsListForLink(objParamsAccount);
             var lstInstituciones = await BelvoService.InstitutionsList();
 
-            foreach (var item in lstCuentas)
+            foreach (CuentaListResult item in lstCuentas)
             {
-                Cuenta objModel = new Cuenta
-                {
-                    IdCuenta                            = data.id,
-                    CuentaAgencia                       = data.agency,
-                    SaldoDisponible                     = data.balance_available,
-                    SaldoActual                         = data.balance_current,
-                    CuentaTipoSaldo                     = data.balance_type,
-                    IdProductoBancario                  = data.bank_product_id,
-                    CuentaCategoria                     = data.category,
-                    RecoleccionFecha                    = data.collected_at,
-                    CreadoFecha                         = data.created_at,
-                    CreditoRecoleccionFecha             = data.credit_data?.collected_at        ?? null,
-                    CreditoLimite                       = data.credit_data?.credit_limit        ?? 0,
-                    CreditoCorteFecha                   = data.credit_data?.cutting_date        ?? "",
-                    CreditoTasaInteres                  = data.credit_data?.interest_rate       ?? 0,
-                    CreditoSaldoUltimoPeriodo           = data.credit_data?.last_period_balance ?? 0,
-                    CreditoUltimoPagoFecha              = data.credit_data?.last_payment_date   ?? "",
-                    CreditoPagoMinimo                   = data.credit_data?.minimum_payment     ?? 0,
-                    CreditoPagoMensual                  = data.credit_data?.monthly_payment     ?? 0,
-                    CreditoProximoPagoFecha             = data.credit_data?.next_payment_date   ?? "",
-                    CreditoPagoSinInteres               = data.credit_data?.no_interest_payment ?? 0,
-                    MonedaCodigo                        = data.currency,
-                    FondosSaldo                         = data.funds_data?.balance      ?? 0,
-                    FondosRecoleccionFecha              = data.funds_data?.collected_at ?? null,
-                    FondosNombre                        = data.funds_data?.name         ?? "",
-                    FondosPorcentaje                    = data.funds_data?.percentage   ?? 0,
-                    FondosIdentificacionPublicaJson     = JsonConvert.SerializeObject(data.funds_data?.public_identifications ?? new List<IdentificacionPublica>()),
-                    FondosTipo                          = data.funds_data?.type ?? "",
-                    InstitucionNombre                   = lstInstituciones.Where(x => x.name == (item.institution?.name ?? "")).FirstOrDefault()?.display_name ?? "",
-                    InstitucionTipo                     = data.institution_type,
-                    InstitucionCodigo                   = data.institution_code,
-                    CuentaIdentificacionInterna         = data.internal_identification,
-                    UltimoAccesoFecha                   = data.last_accessed_at ?? null,
-                    IdLink                              = data.link,
-                    PrestamoRecoleccionFecha            = data.loan_data?.collected_at          ?? null,
-                    PrestamoMontoContrato               = data.loan_data?.contract_amount       ?? 0,
-                    PrestamoContratoFinalizacionFecha   = data.loan_data?.contract_end_date     ?? "",
-                    PrestamoNumeroContrato              = data.loan_data?.contract_number       ?? "",
-                    PrestamoContratoInicioFecha         = data.loan_data?.contract_start_date   ?? "",
-                    PrestamoCorteFecha                  = data.loan_data?.cutting_date          ?? "",
-                    PrestamoDiaCorte                    = data.loan_data?.cutting_day           ?? "",
-                    PrestamoTarifaJson                  = JsonConvert.SerializeObject(data.loan_data?.fees ?? new List<Tarifa>()),
-                    PrestamoTasaInteresJson             = JsonConvert.SerializeObject(data.loan_data?.interest_rates ?? new List<TasaInteres>()),
-                    PrestamoUltimoPagoFecha             = data.loan_data?.last_payment_date     ?? "",
-                    PrestamoTipo                        = data.loan_data?.loan_type             ?? "",
-                    PrestamoPagoMensual                 = data.loan_data?.monthly_payment       ?? 0,
-                    PrestamoPagoSinInteres              = data.loan_data?.no_interest_payment   ?? 0,
-                    PrestamoNumeroCuotasTotal           = Globals.ParseIntNull(data.loan_data?.number_of_installments_total ?? "0"),
-                    PrestamoNumeroCuotasPendientes      = Globals.ParseIntNull(data.loan_data?.number_of_installments_outstanding ?? "0"),
-                    PrestamoSaldoPendientePago          = data.loan_data?.outstanding_balance   ?? 0,
-                    PrestamoPrincipalPendientePago      = data.loan_data?.outstanding_principal ?? 0,
-                    PrestamoDiaPago                     = data.loan_data?.payment_day           ?? "",
-                    PrestamoPrincipal                   = data.loan_data?.principal             ?? 0,
-                    CuentaNombre                        = data.name,
-                    CuentaNumero                        = data.number,
-                    CuentaTipo                          = data.type,               
-                    CuentaIdentificacionPublicaNombre   = data.public_identification_name,
-                    CuentaIdentificacionPublicaValor    = data.public_identification_value,
-                    CuentasPorCobrarAnticipado          = data.receivables_data?.anticipated    ?? 0,
-                    CuentasPorCobrarDisponible          = data.receivables_data?.available      ?? 0,
-                    CuentasPorCobrarRecoleccionFecha    = data.receivables_data?.collected_at   ?? null,
-                    CuentasPorCobrarActual              = data.receivables_data?.current        ?? 0,
-                };                                
+                Cuenta objModel                             = new Cuenta();                
+                objModel.IdCuenta                           = item.id;
+                objModel.CuentaAgencia                      = item.agency;
+                objModel.SaldoDisponible                    = item.balance_available;
+                objModel.SaldoActual                        = item.balance_current;
+                objModel.CuentaTipoSaldo                    = item.balance_type;
+                objModel.IdProductoBancario                 = item.bank_product_id;
+                objModel.CuentaCategoria                    = item.category;
+                objModel.RecoleccionFecha                   = item.collected_at;
+                objModel.CreadoFecha                        = item.created_at;
+                objModel.CreditoRecoleccionFecha            = item.credit_data?.collected_at        ?? null;
+                objModel.CreditoLimite                      = item.credit_data?.credit_limit        ?? 0;
+                objModel.CreditoCorteFecha                  = item.credit_data?.cutting_date        ?? "";
+                objModel.CreditoTasaInteres                 = item.credit_data?.interest_rate       ?? 0;
+                objModel.CreditoSaldoUltimoPeriodo          = item.credit_data?.last_period_balance ?? 0;
+                objModel.CreditoUltimoPagoFecha             = item.credit_data?.last_payment_date   ?? "";
+                objModel.CreditoPagoMinimo                  = item.credit_data?.minimum_payment     ?? 0;
+                objModel.CreditoPagoMensual                 = item.credit_data?.monthly_payment     ?? 0;
+                objModel.CreditoProximoPagoFecha            = item.credit_data?.next_payment_date   ?? "";
+                objModel.CreditoPagoSinInteres              = item.credit_data?.no_interest_payment ?? 0;
+                objModel.MonedaCodigo                       = item.currency;
+                objModel.FondosSaldo                        = item.funds_data?.balance      ?? 0;
+                objModel.FondosRecoleccionFecha             = item.funds_data?.collected_at ?? null;
+                objModel.FondosNombre                       = item.funds_data?.name         ?? "";
+                objModel.FondosPorcentaje                   = item.funds_data?.percentage   ?? 0;
+                objModel.FondosIdentificacionPublicaJson    = JsonConvert.SerializeObject(item.funds_data?.public_identifications ?? new List<IdentificacionPublica>());
+                objModel.FondosTipo                         = item.funds_data?.type ?? "";
+                objModel.InstitucionNombre                  = lstInstituciones.Where(x => x.name == (item.institution?.name ?? "")).FirstOrDefault()?.display_name ?? "";
+                objModel.InstitucionTipo                    = item.institution_type;
+                objModel.InstitucionCodigo                  = item.institution_code;
+                objModel.CuentaIdentificacionInterna        = item.internal_identification;
+                objModel.UltimoAccesoFecha                  = item.last_accessed_at ?? null;
+                objModel.IdLink                             = item.link;
+                objModel.PrestamoRecoleccionFecha           = item.loan_data?.collected_at          ?? null;
+                objModel.PrestamoMontoContrato              = item.loan_data?.contract_amount       ?? 0;
+                objModel.PrestamoContratoFinalizacionFecha  = item.loan_data?.contract_end_date     ?? "";
+                objModel.PrestamoNumeroContrato             = item.loan_data?.contract_number       ?? "";
+                objModel.PrestamoContratoInicioFecha        = item.loan_data?.contract_start_date   ?? "";
+                objModel.PrestamoCorteFecha                 = item.loan_data?.cutting_date          ?? "";
+                objModel.PrestamoDiaCorte                   = item.loan_data?.cutting_day           ?? "";
+                objModel.PrestamoTarifaJson                 = JsonConvert.SerializeObject(item.loan_data?.fees ?? new List<Tarifa>());
+                objModel.PrestamoTasaInteresJson            = JsonConvert.SerializeObject(item.loan_data?.interest_rates ?? new List<TasaInteres>());
+                objModel.PrestamoUltimoPagoFecha            = item.loan_data?.last_payment_date     ?? "";
+                objModel.PrestamoTipo                       = item.loan_data?.loan_type             ?? "";
+                objModel.PrestamoPagoMensual                = item.loan_data?.monthly_payment       ?? 0;
+                objModel.PrestamoPagoSinInteres             = item.loan_data?.no_interest_payment   ?? 0;
+                objModel.PrestamoNumeroCuotasTotal          = Globals.ParseIntNull(item.loan_data?.number_of_installments_total ?? "0");
+                objModel.PrestamoNumeroCuotasPendientes     = Globals.ParseIntNull(item.loan_data?.number_of_installments_outstanding ?? "0");
+                objModel.PrestamoSaldoPendientePago         = item.loan_data?.outstanding_balance   ?? 0;
+                objModel.PrestamoPrincipalPendientePago     = item.loan_data?.outstanding_principal ?? 0;
+                objModel.PrestamoDiaPago                    = item.loan_data?.payment_day           ?? "";
+                objModel.PrestamoPrincipal                  = item.loan_data?.principal             ?? 0;
+                objModel.CuentaNombre                       = item.name;
+                objModel.CuentaNumero                       = item.number;
+                objModel.CuentaTipo                         = item.type;
+                objModel.CuentaIdentificacionPublicaNombre  = item.public_identification_name;
+                objModel.CuentaIdentificacionPublicaValor   = item.public_identification_value;
+                objModel.CuentasPorCobrarAnticipado         = item.receivables_data?.anticipated    ?? 0;
+                objModel.CuentasPorCobrarDisponible         = item.receivables_data?.available      ?? 0;
+                objModel.CuentasPorCobrarRecoleccionFecha   = item.receivables_data?.collected_at   ?? null;
+                objModel.CuentasPorCobrarActual             = item.receivables_data?.current ?? 0;
+                // objModel.SetCreated(Globals.GetUser(user));
 
                 _context.Cuentas.Add(objModel);
             }

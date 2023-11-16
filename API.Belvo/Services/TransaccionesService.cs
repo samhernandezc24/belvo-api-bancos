@@ -32,35 +32,33 @@ namespace API.Belvo.Services
         {
             using var objTransaction = _context.Database.BeginTransaction();
 
-            Transaccion objModel = new Transaccion
-            {
-                IdTransaccion                       = data.id,
-                IdCuenta                            = data.account?.id              ?? "",
-                IdCuentaProductoBancario            = data.account?.bank_product_id ?? "",
-                IdLink                              = data.account?.link            ?? "",
-                TransaccionContableFecha            = data.accounting_date,
-                TransaccionMonto                    = data.amount,
-                TransaccionSaldo                    = data.balance,
-                TransaccionCategoria                = data.category,
-                RecoleccionFecha                    = data.collected_at,
-                CreadoFecha                         = data.created_at,
-                TarjetaCreditoFacturaMonto          = data.credit_card_data?.bill_amount         ?? 0,
-                TarjetaCreditoFacturaNombre         = data.credit_card_data?.bill_name           ?? "",
-                TarjetaCreditoFacturaEstatusName    = data.credit_card_data?.bill_status         ?? "",
-                TarjetaCreditoRecoleccionFecha      = data.credit_card_data?.collected_at        ?? null,
-                TarjetaCreditoTotalFacturaAnterior  = Globals.ParseDecimalNull(data.credit_card_data?.previous_bill_total ?? "0.00"),
-                MonedaCodigo                        = data.currency,
-                TransaccionDescripcion              = data.description,
-                TransaccionIdentificacionInterna    = data.internal_identification,
-                ComercianteNombre                   = data.merchant?.merchant_name ?? "",
-                TransaccionObservaciones            = data.observations,
-                TransaccionReferencia               = data.reference,
-                TransaccionEstatusName              = data.status,
-                TransaccionSubCategoria             = data.subcategory,
-                TransaccionTipo                     = data.type,
-                TransaccionValorFecha               = data.value_date,
-            };
-
+            Transaccion objModel                        = new Transaccion();            
+            objModel.IdTransaccion                      = data.id;
+            objModel.IdCuenta                           = data.account?.id              ?? "";
+            objModel.IdCuentaProductoBancario           = data.account?.bank_product_id ?? "";
+            objModel.IdLink                             = data.account?.link            ?? "";
+            objModel.TransaccionContableFecha           = data.accounting_date;
+            objModel.TransaccionMonto                   = data.amount;
+            objModel.TransaccionSaldo                   = data.balance;
+            objModel.TransaccionCategoria               = data.category;
+            objModel.RecoleccionFecha                   = data.collected_at;
+            objModel.CreadoFecha                        = data.created_at;
+            objModel.TarjetaCreditoFacturaMonto         = data.credit_card_data?.bill_amount         ?? 0;
+            objModel.TarjetaCreditoFacturaNombre        = data.credit_card_data?.bill_name           ?? "";
+            objModel.TarjetaCreditoFacturaEstatusName   = data.credit_card_data?.bill_status         ?? "";
+            objModel.TarjetaCreditoRecoleccionFecha     = data.credit_card_data?.collected_at        ?? null;
+            objModel.TarjetaCreditoTotalFacturaAnterior = Globals.ParseDecimalNull(data.credit_card_data?.previous_bill_total ?? "0.00");
+            objModel.MonedaCodigo                       = data.currency;
+            objModel.TransaccionDescripcion             = data.description;
+            objModel.TransaccionIdentificacionInterna   = data.internal_identification;
+            objModel.ComercianteNombre                  = data.merchant?.merchant_name ?? "";
+            objModel.TransaccionObservaciones           = data.observations;
+            objModel.TransaccionReferencia              = data.reference;
+            objModel.TransaccionEstatusName             = data.status;
+            objModel.TransaccionSubCategoria            = data.subcategory;
+            objModel.TransaccionTipo                    = data.type;
+            objModel.TransaccionValorFecha              = data.value_date;
+            
             _context.Transacciones.Add(objModel);
             await _context.SaveChangesAsync();
             objTransaction.Commit();
