@@ -77,8 +77,8 @@ namespace API.Belvo.Models
         // DatosPrestamo [LoanData] => Tarifa [Fees]
         public string PrestamoTarifaJson { get; set; }
 
-        public string PrestamoNumeroCuotasTotal { get; set; }
-        public string PrestamoNumeroCuotasPendientes { get; set; }
+        public int? PrestamoNumeroCuotasTotal { get; set; }
+        public int? PrestamoNumeroCuotasPendientes { get; set; }
         public string PrestamoContratoInicioFecha { get; set; }
         public string PrestamoContratoFinalizacionFecha { get; set; }
         public string PrestamoNumeroContrato { get; set; }

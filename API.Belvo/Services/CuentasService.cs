@@ -1,12 +1,13 @@
-﻿using System.Linq.Expressions;
-using System.Security.Claims;
-using API.Belvo.Models;
+﻿using API.Belvo.Models;
 using API.Belvo.Persistence;
 using API.Belvo.ViewModels;
+using API.Belvo.ViewModels.Requests;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.Linq.Expressions;
+using System.Security.Claims;
 using Workcube.Interfaces;
 using Workcube.Libraries;
 using Workcube.ViewModels;
@@ -17,22 +18,46 @@ namespace API.Belvo.Services
     {
         private readonly Context _context;
         private readonly IMapper _mapper;
+        private readonly LinksService _linksService;
 
-        public CuentasService(Context context, IMapper mapper) 
+        public CuentasService(Context context, IMapper mapper, LinksService linksService) 
         {
             _context = context;
             _mapper = mapper;
+            _linksService = linksService;
         }
 
-        public Task Create(dynamic data, ClaimsPrincipal user)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task Create(dynamic data)
+        public async Task Create(dynamic data, ClaimsPrincipal user)
         {
             using var objTransaction = _context.Database.BeginTransaction();
-            try
+
+            ReqStoreLink objParamsLink = new ReqStoreLink
+            {
+                access_mode         = "recurrent",
+                credentials_storage = "store",
+                external_id         = "df96bf78-d9a2-455c-8b95-769f3b75b6a5",
+                fetch_resources     = new List<string>() { "ACCOUNTS", "BALANCES", "INCOMES", "OWNERS", "TRANSACTIONS" },
+                institution         = Globals.ToString(data.institutionName),
+                password            = Globals.ToString(data.password),
+                stale_in            = "365d",
+                token               = "WK2023ERP",
+                username            = Globals.ToString(data.username),
+            };
+
+            LinkListResult objModelLink = await BelvoService.LinksStore(objParamsLink);
+            await _linksService.Create(objModelLink);
+
+            ReqStoreAccount objParamsAccount = new ReqStoreAccount
+            {
+                link        = objModelLink.id,
+                token       = "WK2023ERP",
+                save_data   = true,
+            };
+
+            List<CuentaListResult> lstCuentas = await BelvoService.AccountsListForLink(objParamsAccount);
+            var lstInstituciones = await BelvoService.InstitutionsList();
+
+            foreach (var item in lstCuentas)
             {
                 Cuenta objModel = new Cuenta
                 {
@@ -62,7 +87,7 @@ namespace API.Belvo.Services
                     FondosPorcentaje                    = data.funds_data?.percentage   ?? 0,
                     FondosIdentificacionPublicaJson     = JsonConvert.SerializeObject(data.funds_data?.public_identifications ?? new List<IdentificacionPublica>()),
                     FondosTipo                          = data.funds_data?.type ?? "",
-                    InstitucionNombre                   = data.institution_name,
+                    InstitucionNombre                   = lstInstituciones.Where(x => x.name == (item.institution?.name ?? "")).FirstOrDefault()?.display_name ?? "",
                     InstitucionTipo                     = data.institution_type,
                     InstitucionCodigo                   = data.institution_code,
                     CuentaIdentificacionInterna         = data.internal_identification,
@@ -89,24 +114,20 @@ namespace API.Belvo.Services
                     PrestamoPrincipal                   = data.loan_data?.principal             ?? 0,
                     CuentaNombre                        = data.name,
                     CuentaNumero                        = data.number,
+                    CuentaTipo                          = data.type,               
                     CuentaIdentificacionPublicaNombre   = data.public_identification_name,
                     CuentaIdentificacionPublicaValor    = data.public_identification_value,
                     CuentasPorCobrarAnticipado          = data.receivables_data?.anticipated    ?? 0,
                     CuentasPorCobrarDisponible          = data.receivables_data?.available      ?? 0,
                     CuentasPorCobrarRecoleccionFecha    = data.receivables_data?.collected_at   ?? null,
                     CuentasPorCobrarActual              = data.receivables_data?.current        ?? 0,
-                    CuentaTipo                          = data.type,
-                };
+                };                                
 
                 _context.Cuentas.Add(objModel);
-                await _context.SaveChangesAsync();
-                objTransaction.Commit();
             }
-            catch (Exception ex)
-            {
-                objTransaction.Rollback();
-                throw new ArgumentException("Error al crear el objeto Cuenta: " + ex.Message, ex);
-            }
+
+            await _context.SaveChangesAsync();
+            objTransaction.Commit();
         }
 
         public Task<dynamic> DataSource(dynamic data, ClaimsPrincipal user)
@@ -116,23 +137,22 @@ namespace API.Belvo.Services
 
         public async Task<dynamic> DataSource(dynamic data)
         {
-            // Obtener la lista de elementos a través de la expresión de origen de datos.
             IQueryable<CuentaViewModel> lstItems                    = DataSourceExpression(data);
-            // Construir el objeto de origen de datos usando el constructor adecuado.
             DataSourceBuilder<CuentaViewModel> objDataTableBuilder  = new DataSourceBuilder<CuentaViewModel>(data, lstItems);
 
-            // Obtener el resultado del objeto de origen de datos.
             var objDataTableResult              = await objDataTableBuilder.build();
             List<CuentaViewModel> lstOriginal   = objDataTableResult.rows;
+            List<dynamic> lstRows               = new List<dynamic>();
 
-            // Proyectar las propiedades deseadas en una nueva lista de objetos.
-            var lstRows = lstOriginal.Select(x => new
+            lstOriginal.ForEach(x =>
             {
-                IdCuenta    = x.IdCuenta,
-                IdLink      = x.IdLink,
-            }).ToList();
+                lstRows.Add(new
+                {
+                    IdCuenta    = x.IdCuenta,
+                    IdLink      = x.IdLink,
+                });
+            });
 
-            // Construir el objeto de devolución con la lista proyectada y otras propiedades.
             var objReturn = new
             {
                 rows    = lstRows,
@@ -221,40 +241,37 @@ namespace API.Belvo.Services
         public async Task Delete(dynamic data, ClaimsPrincipal user)
         {
             using var objTransaction = _context.Database.BeginTransaction();
-            try
-            {
-                string id = Globals.ParseGuid(data.idCuenta);
-                Cuenta objModel = await Find(id) ?? throw new ArgumentException($"No se encontró la cuenta con el Id: {id}");
 
-                if (objModel.Deleted) { throw new InvalidOperationException($"El objeto Cuenta con el Id {id} ya ha sido marcado como eliminado."); }
+            string id = Globals.ParseGuid(data.idCuenta);
+            Cuenta objModel = await Find(id) ?? throw new ArgumentException(String.Format("No se encontró la cuenta con el Id: {0}", id));
 
-                objModel.Deleted = true;
-                objModel.SetUpdated(Globals.GetUser(user));
+            if (objModel.Deleted) { throw new ArgumentException(String.Format("La cuenta con el Id {0} ya había sido eliminado previamente.", id)); }
 
-                _context.Cuentas.Update(objModel);
-                await _context.SaveChangesAsync();
-                objTransaction.Commit();
-            }
-            catch (Exception ex)
-            {
-                objTransaction.Rollback();
-                throw new ArgumentException("Error al eliminar el objeto Cuenta: " + ex.Message, ex);
-            }
+            objModel.Deleted = true;
+            objModel.SetUpdated(Globals.GetUser(user));
+
+            _context.Cuentas.Update(objModel);
+            await _context.SaveChangesAsync();
+            objTransaction.Commit();
         }
 
         public async Task<Cuenta> Find(string id)
         {
-            var cuenta = await _context.Cuentas.FindAsync(id);
-            return cuenta ?? throw new ArgumentException($"No se encontró la transacción con el Id: {id}");
+            return await _context.Cuentas.FindAsync(id) ?? throw new ArgumentException(String.Format("No se encontró la cuenta con el Id: {0}", id));
         }
 
         public async Task<Cuenta> FindSelectorById(string id, string fields)
         {
             var cuenta = await _context.Cuentas.Where(x => x.IdCuenta == id).Select(Globals.BuildSelector<Cuenta, Cuenta>(fields)).FirstOrDefaultAsync();
-            return cuenta ?? throw new ArgumentException($"No se encontró la cuenta con el Id: {id} o el campo especificado '{fields}' no es válido en la búsqueda.");
+            return cuenta ?? throw new ArgumentException(String.Format("No se encontró la cuenta con el Id: {0} o el campo especificado '{1}' no es válido en la búsqueda.", id, fields));
         }
 
         public async Task<List<dynamic>> List()
+        {
+            return await _context.Cuentas.AsNoTracking().Where(x => !x.Deleted).Select(x => new { x.IdCuenta, x.IdLink, x.CuentaNombre, x.InstitucionCodigo, x.InstitucionNombre }).OrderBy(x => x.InstitucionNombre).ToListAsync<dynamic>();
+        }
+
+        public async Task<List<dynamic>> List(string codigoERP)
         {
             return await _context.Cuentas.AsNoTracking().Where(x => !x.Deleted).Select(x => new { x.IdCuenta, x.IdLink, x.CuentaNombre }).ToListAsync<dynamic>();
         }
@@ -262,42 +279,34 @@ namespace API.Belvo.Services
         public async Task<List<dynamic>> ListSelectorById(string id, string fields)
         {
             var cuenta = await _context.Cuentas.AsNoTracking().Where(x => !x.Deleted && x.IdCuenta == id).Select(Globals.BuildSelector<Cuenta, Cuenta>(fields)).ToListAsync<dynamic>();
-            return cuenta ?? throw new ArgumentException($"No se encontró la cuenta con el Id: {id} o el campo especificado '{fields}' no es válido en la búsqueda.");
+            return cuenta ?? throw new ArgumentException(String.Format("No se encontró la cuenta con el Id: {0} o el campo especificado '{1}' no es válido en la búsqueda.", id, fields));
         }
 
         public async Task<List<dynamic>> UsuariosList()
         {
-            try
-            {
-                var lstUsuarios = await _context.Cuentas
-                    .AsNoTracking()
-                    .Select(x => new
-                    {
-                        IdCreatedUser   = x.IdCreatedUser,
-                        CreatedUserName = x.CreatedUserName,
-                        IdUpdatedUser   = x.IdUpdatedUser,
-                        UpdatedUserName = x.UpdatedUserName,
-                    })
-                    .Distinct()
-                    .ToListAsync();
-
-                var rows = lstUsuarios.SelectMany(x => new[]
+            var lstUsuarios = await _context.Cuentas
+                .AsNoTracking()
+                .Select(x => new
                 {
-                    new { Id = x.IdCreatedUser, NombreCompleto = x.CreatedUserName },
-                    new { Id = x.IdUpdatedUser, NombreCompleto = x.UpdatedUserName },
+                    IdCreatedUser = x.IdCreatedUser,
+                    CreatedUserName = x.CreatedUserName,
+                    IdUpdatedUser = x.IdUpdatedUser,
+                    UpdatedUserName = x.UpdatedUserName,
                 })
-                .GroupBy(x => x.Id)
-                .Select(x => x.First())
-                .OrderBy(x => x.NombreCompleto)
-                .ToList<dynamic>();
+                .Distinct()
+                .ToListAsync();
 
-                return rows;
-            }
-            catch (Exception ex)
+            var rows = lstUsuarios.SelectMany(x => new[]
             {
-                Console.WriteLine(String.Format("Error en UsuariosList: {0}", ex.Message));
-                return new List<dynamic>();
-            }
+                new { Id = x.IdCreatedUser, NombreCompleto = x.CreatedUserName },
+                new { Id = x.IdUpdatedUser, NombreCompleto = x.UpdatedUserName },
+            })
+            .GroupBy(x => x.Id)
+            .Select(x => x.First())
+            .OrderBy(x => x.NombreCompleto)
+            .ToList<dynamic>();
+
+            return rows;
         }
 
         public Task<byte[]> Reporte(dynamic data)
@@ -308,81 +317,74 @@ namespace API.Belvo.Services
         public async Task Update(dynamic data, ClaimsPrincipal user)
         {
             using var objTransaction = _context.Database.BeginTransaction();
-            try
-            {
-                string id           = Globals.ParseGuid(data.idCuenta);
-                Cuenta objModel     = await Find(id) ?? throw new ArgumentException($"No se encontró la cuenta con el Id: {id}");
 
-                objModel.CuentaAgencia                      = data.agency;
-                objModel.SaldoDisponible                    = data.balance_available;
-                objModel.SaldoActual                        = data.balance_current;
-                objModel.CuentaTipoSaldo                    = data.balance_type;
-                objModel.IdProductoBancario                 = data.bank_product_id;
-                objModel.CuentaCategoria                    = data.category;
-                objModel.RecoleccionFecha                   = data.collected_at;
-                objModel.CreadoFecha                        = data.created_at;
-                objModel.CreditoRecoleccionFecha            = data.credit_data?.collected_at        ?? null;
-                objModel.CreditoLimite                      = data.credit_data?.credit_limit        ?? 0;
-                objModel.CreditoCorteFecha                  = data.credit_data?.cutting_date        ?? "";
-                objModel.CreditoTasaInteres                 = data.credit_data?.interest_rate       ?? 0;
-                objModel.CreditoSaldoUltimoPeriodo          = data.credit_data?.last_period_balance ?? 0;
-                objModel.CreditoUltimoPagoFecha             = data.credit_data?.last_payment_date   ?? "";
-                objModel.CreditoPagoMinimo                  = data.credit_data?.minimum_payment     ?? 0;
-                objModel.CreditoPagoMensual                 = data.credit_data?.monthly_payment     ?? 0;
-                objModel.CreditoProximoPagoFecha            = data.credit_data?.next_payment_date   ?? "";
-                objModel.CreditoPagoSinInteres              = data.credit_data?.no_interest_payment ?? 0;
-                objModel.MonedaCodigo                       = data.currency;
-                objModel.FondosSaldo                        = data.funds_data?.balance      ?? 0;
-                objModel.FondosRecoleccionFecha             = data.funds_data?.collected_at ?? null;
-                objModel.FondosNombre                       = data.funds_data?.name         ?? "";
-                objModel.FondosPorcentaje                   = data.funds_data?.percentage   ?? 0;
-                objModel.FondosIdentificacionPublicaJson    = JsonConvert.SerializeObject(data.funds_data?.public_identifications ?? new List<IdentificacionPublica>());
-                objModel.FondosTipo                         = data.funds_data?.type ?? "";
-                objModel.InstitucionNombre                  = data.institution_name;
-                objModel.InstitucionTipo                    = data.institution_type;
-                objModel.InstitucionCodigo                  = data.institution_code;
-                objModel.CuentaIdentificacionInterna        = data.internal_identification;
-                objModel.UltimoAccesoFecha                  = data.last_accessed_at ?? null;
-                objModel.IdLink                             = data.link;
-                objModel.PrestamoRecoleccionFecha           = data.loan_data?.collected_at          ?? null;
-                objModel.PrestamoMontoContrato              = data.loan_data?.contract_amount       ?? 0;
-                objModel.PrestamoContratoFinalizacionFecha  = data.loan_data?.contract_end_date     ?? "";
-                objModel.PrestamoNumeroContrato             = data.loan_data?.contract_number       ?? "";
-                objModel.PrestamoContratoInicioFecha        = data.loan_data?.contract_start_date   ?? "";
-                objModel.PrestamoCorteFecha                 = data.loan_data?.cutting_date          ?? "";
-                objModel.PrestamoDiaCorte                   = data.loan_data?.cutting_day           ?? "";
-                objModel.PrestamoTarifaJson                 = JsonConvert.SerializeObject(data.loan_data?.fees ?? new List<Tarifa>());
-                objModel.PrestamoTasaInteresJson            = JsonConvert.SerializeObject(data.loan_data?.interest_rates ?? new List<TasaInteres>());
-                objModel.PrestamoUltimoPagoFecha            = data.loan_data?.last_payment_date     ?? "";
-                objModel.PrestamoTipo                       = data.loan_data?.loan_type             ?? "";
-                objModel.PrestamoPagoMensual                = data.loan_data?.monthly_payment       ?? 0;
-                objModel.PrestamoPagoSinInteres             = data.loan_data?.no_interest_payment   ?? 0;
-                objModel.PrestamoNumeroCuotasTotal          = Globals.ParseIntNull(data.loan_data?.number_of_installments_total ?? "0");
-                objModel.PrestamoNumeroCuotasPendientes     = Globals.ParseIntNull(data.loan_data?.number_of_installments_outstanding ?? "0");
-                objModel.PrestamoSaldoPendientePago         = data.loan_data?.outstanding_balance   ?? 0;
-                objModel.PrestamoPrincipalPendientePago     = data.loan_data?.outstanding_principal ?? 0;
-                objModel.PrestamoDiaPago                    = data.loan_data?.payment_day           ?? "";
-                objModel.PrestamoPrincipal                  = data.loan_data?.principal             ?? 0;
-                objModel.CuentaNombre                       = data.name;
-                objModel.CuentaNumero                       = data.number;
-                objModel.CuentaIdentificacionPublicaNombre  = data.public_identification_name;
-                objModel.CuentaIdentificacionPublicaValor   = data.public_identification_value;
-                objModel.CuentasPorCobrarAnticipado         = data.receivables_data?.anticipated    ?? 0;
-                objModel.CuentasPorCobrarDisponible         = data.receivables_data?.available      ?? 0;
-                objModel.CuentasPorCobrarRecoleccionFecha   = data.receivables_data?.collected_at   ?? null;
-                objModel.CuentasPorCobrarActual             = data.receivables_data?.current        ?? 0;
-                objModel.CuentaTipo                         = data.type;
-                objModel.SetUpdated(Globals.GetUser(user));
+            string id       = Globals.ParseGuid(data.idCuenta);
+            Cuenta objModel = await Find(id) ?? throw new ArgumentException(String.Format("No se encontró la cuenta con el Id: {0}", id));
 
-                _context.Cuentas.Update(objModel);
-                await _context.SaveChangesAsync();
-                objTransaction.Commit();
-            }
-            catch (Exception ex)
-            {
-                objTransaction.Rollback();
-                throw new ArgumentException("Error al actualizar el objeto Cuenta: " + ex.Message, ex);
-            }
+            objModel.CuentaAgencia                      = data.agency;
+            objModel.SaldoDisponible                    = data.balance_available;
+            objModel.SaldoActual                        = data.balance_current;
+            objModel.CuentaTipoSaldo                    = data.balance_type;
+            objModel.IdProductoBancario                 = data.bank_product_id;
+            objModel.CuentaCategoria                    = data.category;
+            objModel.RecoleccionFecha                   = data.collected_at;
+            objModel.CreadoFecha                        = data.created_at;
+            objModel.CreditoRecoleccionFecha            = data.credit_data?.collected_at        ?? null;
+            objModel.CreditoLimite                      = data.credit_data?.credit_limit        ?? 0;
+            objModel.CreditoCorteFecha                  = data.credit_data?.cutting_date        ?? "";
+            objModel.CreditoTasaInteres                 = data.credit_data?.interest_rate       ?? 0;
+            objModel.CreditoSaldoUltimoPeriodo          = data.credit_data?.last_period_balance ?? 0;
+            objModel.CreditoUltimoPagoFecha             = data.credit_data?.last_payment_date   ?? "";
+            objModel.CreditoPagoMinimo                  = data.credit_data?.minimum_payment     ?? 0;
+            objModel.CreditoPagoMensual                 = data.credit_data?.monthly_payment     ?? 0;
+            objModel.CreditoProximoPagoFecha            = data.credit_data?.next_payment_date   ?? "";
+            objModel.CreditoPagoSinInteres              = data.credit_data?.no_interest_payment ?? 0;
+            objModel.MonedaCodigo                       = data.currency;
+            objModel.FondosSaldo                        = data.funds_data?.balance      ?? 0;
+            objModel.FondosRecoleccionFecha             = data.funds_data?.collected_at ?? null;
+            objModel.FondosNombre                       = data.funds_data?.name         ?? "";
+            objModel.FondosPorcentaje                   = data.funds_data?.percentage   ?? 0;
+            objModel.FondosIdentificacionPublicaJson    = JsonConvert.SerializeObject(data.funds_data?.public_identifications ?? new List<IdentificacionPublica>());
+            objModel.FondosTipo                         = data.funds_data?.type ?? "";
+            objModel.InstitucionNombre                  = data.institution_name;
+            objModel.InstitucionTipo                    = data.institution_type;
+            objModel.InstitucionCodigo                  = data.institution_code;
+            objModel.CuentaIdentificacionInterna        = data.internal_identification;
+            objModel.UltimoAccesoFecha                  = data.last_accessed_at ?? null;
+            objModel.IdLink                             = data.link;
+            objModel.PrestamoRecoleccionFecha           = data.loan_data?.collected_at          ?? null;
+            objModel.PrestamoMontoContrato              = data.loan_data?.contract_amount       ?? 0;
+            objModel.PrestamoContratoFinalizacionFecha  = data.loan_data?.contract_end_date     ?? "";
+            objModel.PrestamoNumeroContrato             = data.loan_data?.contract_number       ?? "";
+            objModel.PrestamoContratoInicioFecha        = data.loan_data?.contract_start_date   ?? "";
+            objModel.PrestamoCorteFecha                 = data.loan_data?.cutting_date          ?? "";
+            objModel.PrestamoDiaCorte                   = data.loan_data?.cutting_day           ?? "";
+            objModel.PrestamoTarifaJson                 = JsonConvert.SerializeObject(data.loan_data?.fees ?? new List<Tarifa>());
+            objModel.PrestamoTasaInteresJson            = JsonConvert.SerializeObject(data.loan_data?.interest_rates ?? new List<TasaInteres>());
+            objModel.PrestamoUltimoPagoFecha            = data.loan_data?.last_payment_date     ?? "";
+            objModel.PrestamoTipo                       = data.loan_data?.loan_type             ?? "";
+            objModel.PrestamoPagoMensual                = data.loan_data?.monthly_payment       ?? 0;
+            objModel.PrestamoPagoSinInteres             = data.loan_data?.no_interest_payment   ?? 0;
+            objModel.PrestamoNumeroCuotasTotal          = Globals.ParseIntNull(data.loan_data?.number_of_installments_total ?? "0");
+            objModel.PrestamoNumeroCuotasPendientes     = Globals.ParseIntNull(data.loan_data?.number_of_installments_outstanding ?? "0");
+            objModel.PrestamoSaldoPendientePago         = data.loan_data?.outstanding_balance   ?? 0;
+            objModel.PrestamoPrincipalPendientePago     = data.loan_data?.outstanding_principal ?? 0;
+            objModel.PrestamoDiaPago                    = data.loan_data?.payment_day           ?? "";
+            objModel.PrestamoPrincipal                  = data.loan_data?.principal             ?? 0;
+            objModel.CuentaNombre                       = data.name;
+            objModel.CuentaNumero                       = data.number;
+            objModel.CuentaTipo                         = data.type;
+            objModel.CuentaIdentificacionPublicaNombre  = data.public_identification_name;
+            objModel.CuentaIdentificacionPublicaValor   = data.public_identification_value;
+            objModel.CuentasPorCobrarAnticipado         = data.receivables_data?.anticipated    ?? 0;
+            objModel.CuentasPorCobrarDisponible         = data.receivables_data?.available      ?? 0;
+            objModel.CuentasPorCobrarRecoleccionFecha   = data.receivables_data?.collected_at   ?? null;
+            objModel.CuentasPorCobrarActual             = data.receivables_data?.current        ?? 0;
+            // objModel.SetUpdated(Globals.GetUser(user));
+
+            _context.Cuentas.Update(objModel);
+            await _context.SaveChangesAsync();
+            objTransaction.Commit();
         }
     }
 }

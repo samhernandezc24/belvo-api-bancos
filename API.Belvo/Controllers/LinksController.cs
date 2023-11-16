@@ -41,7 +41,7 @@ namespace API.Belvo.Controllers
                 objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return Ok(objReturn.build());
+            return objReturn.build();
         }
 
         [HttpPost("DataSource")]
@@ -63,7 +63,7 @@ namespace API.Belvo.Controllers
                 objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return Ok(objReturn.build());
+            return objReturn.build();
         }
 
         [HttpPost("Store")]
@@ -75,7 +75,7 @@ namespace API.Belvo.Controllers
             {
                 objReturn.Result = await _linksService.Create(Globals.JsonData(data));
                 
-                objReturn.Title     = "Link Creado";
+                objReturn.Title     = "Link Generado";
                 objReturn.Message   = "El nuevo link se ha generado exitosamente.";
             }
             catch (AppException appEx)
@@ -87,7 +87,7 @@ namespace API.Belvo.Controllers
                 objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return Ok(objReturn.build());
+            return objReturn.build();
         }
 
         [HttpPost("Details")]
@@ -129,7 +129,7 @@ namespace API.Belvo.Controllers
                 objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return Ok(objReturn.build());
+            return objReturn.build();
         }
 
         [HttpPost("Update")]
@@ -152,7 +152,7 @@ namespace API.Belvo.Controllers
                 objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return Ok(objReturn.build());
+            return objReturn.build();
         }
 
         [HttpPost("Delete")]
@@ -175,7 +175,7 @@ namespace API.Belvo.Controllers
                 objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return Ok(objReturn.build());
+            return objReturn.build();
         }
     }
 }

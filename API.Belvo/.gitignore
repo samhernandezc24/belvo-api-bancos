@@ -3,6 +3,12 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# Node artifact files
+dist/
+bin/
+obj/
+properties/
+
 # App Settings not included because it is per user
 appsettings.json
 

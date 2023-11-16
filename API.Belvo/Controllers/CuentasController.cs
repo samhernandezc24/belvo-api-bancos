@@ -1,5 +1,5 @@
-﻿using System.Text.Json.Nodes;
-using API.Belvo.Services;
+﻿using API.Belvo.Services;
+using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Mvc;
 using Workcube.Libraries;
 
@@ -43,7 +43,7 @@ namespace API.Belvo.Controllers
                 objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return Ok(objReturn.build());
+            return objReturn.build();
         }
 
         [HttpPost("DataSource")]
@@ -65,11 +65,11 @@ namespace API.Belvo.Controllers
                 objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return Ok(objReturn.build());
+            return objReturn.build();
         }
 
         [HttpPost("Create")]
-        public async Task<ActionResult<dynamic>> Create(JsonObject data)
+        public async Task<ActionResult<dynamic>> Create()
         {
             JsonReturn objReturn = new JsonReturn();
 
@@ -93,7 +93,7 @@ namespace API.Belvo.Controllers
                 objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return Ok(objReturn.build());
+            return objReturn.build();
         }
 
         [HttpPost("Store")]
@@ -117,7 +117,7 @@ namespace API.Belvo.Controllers
                 objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return Ok(objReturn.build());
+            return objReturn.build();
         }
 
         [HttpPost("Details")]
@@ -170,7 +170,7 @@ namespace API.Belvo.Controllers
                 objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return Ok(objReturn.build());
+            return objReturn.build();
         }
 
         [HttpPost("Update")]
@@ -195,7 +195,7 @@ namespace API.Belvo.Controllers
                 objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return Ok(objReturn.build());
+            return objReturn.build();
         }
 
         [HttpPost("Delete")]
@@ -219,7 +219,7 @@ namespace API.Belvo.Controllers
                 objReturn.Exception(ExceptionMessage.RawException(ex));
             }
 
-            return Ok(objReturn.build());
+            return objReturn.build();
         }
     }
 }

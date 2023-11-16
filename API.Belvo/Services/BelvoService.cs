@@ -40,7 +40,7 @@ namespace API.Belvo.Services
 
         /*
         |--------------------------------------------------------------------------
-        | [POST] Recupera las cuentas de un "Link"
+        | [POST] Recupera las "Cuentas" de un "Link"
         |--------------------------------------------------------------------------
         |
         | Se recupera las "Cuentas" de un "Link" existente.
@@ -59,6 +59,29 @@ namespace API.Belvo.Services
             CuentaListResult objAccountData = JsonConvert.DeserializeObject<CuentaListResult>(result.content);
 
             return objAccountData;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | [POST] Recupera el listado de "Cuentas" de un "Link"
+        |--------------------------------------------------------------------------
+        |
+        | Se recupera el listado de "Cuentas" de un "Link" existente.
+        |
+        */
+        public static async Task<List<CuentaListResult>> AccountsListForLink(ReqStoreAccount objBodyParams)
+        {
+            WebManagerResultView result = await WebServiceManager.Post(GlobalVariables.belvoApiUrl + "api/accounts", GlobalVariables.lstHeaders, objBodyParams);
+
+            if (!result.isSuccessful)
+            {
+                List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
+                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
+            }
+
+            List<CuentaListResult> lstAccounts = JsonConvert.DeserializeObject<List<CuentaListResult>>(result.content);
+
+            return lstAccounts;
         }
 
         /*

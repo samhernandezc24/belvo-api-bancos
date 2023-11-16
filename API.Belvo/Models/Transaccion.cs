@@ -14,8 +14,11 @@ namespace API.Belvo.Models
         // Cuenta [Account]
         public virtual Cuenta Cuenta { get; set; }
         public string IdCuenta { get; set; }                    // ID GENERADO / OBTENIDO DE BELVO
+
+        // Cuenta [Account] => Link [Link]
         public virtual Link Link { get; set; }
         public string IdLink { get; set; }                      // ID GENERADO / OBTENIDO DE BELVO
+
         public string IdCuentaProductoBancario { get; set; }
 
         public DateTime RecoleccionFecha { get; set; }

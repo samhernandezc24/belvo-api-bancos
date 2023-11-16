@@ -17,6 +17,7 @@
         public string institution_code => institution != null ? institution.name : "";
         public string institution_type => institution != null ? institution.type : "";
         public DateTime collected_at { get; set; }
+        public string collected_at_natural => collected_at.ToString("dd/MM/yyyy hh:mm tt");
         public DateTime created_at { get; set; }
         public string created_at_natural => created_at.ToString("dd/MM/yyyy hh:mm tt");
         public string category { get; set; }

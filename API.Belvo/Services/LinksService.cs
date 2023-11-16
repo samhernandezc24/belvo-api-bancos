@@ -1,12 +1,12 @@
-﻿using System.Linq.Expressions;
-using System.Security.Claims;
-using API.Belvo.Models;
+﻿using API.Belvo.Models;
 using API.Belvo.Persistence;
 using API.Belvo.ViewModels;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.Linq.Expressions;
+using System.Security.Claims;
 using Workcube.Interfaces;
 using Workcube.Libraries;
 using Workcube.ViewModels;
@@ -29,39 +29,33 @@ namespace API.Belvo.Services
             throw new NotImplementedException();
         }
 
-        public async Task Create(dynamic data)
+        public async Task Create(LinkListResult data)
         {
-            using var objTransaction = _context.Database.BeginTransaction();
-            try
-            {
-                var objUser = new ModelGetUser { Id = data.id, Nombre = "Admin Manager" };
+            // using var objTransaction = _context.Database.BeginTransaction();
 
-                Link objModel = new Link
-                {
-                    IdLink                      = data.id,
-                    ModoAcceso                  = data.access_mode,
-                    CreadoFecha                 = data.created_at,
-                    CreadoPor                   = data.created_by,
-                    AlmacenamientoCredenciales  = data.credentials_storage,
-                    BuscarRecursos              = JsonConvert.SerializeObject(data.fetch_resources),
-                    Institucion                 = data.institution,
-                    IdUsuarioInstitucion        = data.institution_user_id,
-                    UltimoAccesoFecha           = data.last_accessed_at,
-                    TasaActualizacion           = data.refresh_rate,
-                    LinkVencimiento             = data.stale_in,
-                    LinkEstatusName             = data.status,
-                };
-                objModel.SetCreated(objUser);
+            var objUser = new ModelGetUser { Id = data.id, Nombre = "Admin Manager" };
 
-                _context.Links.Add(objModel);
-                await _context.SaveChangesAsync();
-                objTransaction.Commit();
-            }
-            catch (Exception ex)
+            Link objModel = new Link
             {
-                objTransaction.Rollback();
-                throw new ArgumentException("Error al crear el objeto Link: " + ex.Message, ex);
-            }
+                IdLink                      = data.id,
+                ModoAcceso                  = data.access_mode,
+                CreadoFecha                 = data.created_at,
+                CreadoPor                   = data.created_by,
+                AlmacenamientoCredenciales  = data.credentials_storage,
+                BuscarRecursos              = JsonConvert.SerializeObject(data.fetch_resources),
+                Institucion                 = data.institution,
+                IdUsuarioInstitucion        = data.institution_user_id,
+                UltimoAccesoFecha           = data.last_accessed_at,
+                TasaActualizacion           = data.refresh_rate,
+                LinkVencimiento             = data.stale_in,
+                LinkEstatusName             = data.status,
+            };
+
+            objModel.SetCreated(objUser);
+
+            _context.Links.Add(objModel);
+            await _context.SaveChangesAsync();
+            // objTransaction.Commit();
         }
 
         public Task<dynamic> DataSource(dynamic data, ClaimsPrincipal user)
@@ -71,41 +65,39 @@ namespace API.Belvo.Services
         
         public async Task<dynamic> DataSource(dynamic data)
         {
-            // Obtener la lista de elementos a través de la expresión de origen de datos.
             IQueryable<LinkViewModel> lstItems                      = DataSourceExpression(data);
-            // Construir el objeto de origen de datos usando el constructor adecuado.
             DataSourceBuilder<LinkViewModel> objDataTableBuilder    = new DataSourceBuilder<LinkViewModel>(data, lstItems);
 
-            // Obtener el resultado del objeto de origen de datos.
             var objDataTableResult          = await objDataTableBuilder.build();
             List<LinkViewModel> lstOriginal = objDataTableResult.rows;
+            List<dynamic> lstRows           = new List<dynamic>();
 
-            // Proyectar las propiedades deseadas en una nueva lista de objetos.
-            var lstRows = lstOriginal.Select(x => new 
+            lstOriginal.ForEach(x =>
             {
-                IdLink                      = x.IdLink,
-                AlmacenamientoCredenciales  = x.AlmacenamientoCredenciales,
-                BuscarRecursos              = x.BuscarRecursos,
-                CreadoFecha                 = x.CreadoFecha,
-                CreadoPor                   = x.CreadoPor,
-                IdExterno                   = x.IdExterno,
-                IdUsuarioInstitucion        = x.IdUsuarioInstitucion,
-                Institucion                 = x.Institucion,
-                LinkEstatusName             = x.LinkEstatusName,
-                LinkVencimiento             = x.LinkVencimiento,
-                ModoAcceso                  = x.ModoAcceso,
-                TasaActualizacion           = x.TasaActualizacion,
-                UltimoAccesoFecha           = x.UltimoAccesoFecha,
-            }).ToList();
+                lstRows.Add(new
+                {
+                    IdLink                      = x.IdLink,
+                    AlmacenamientoCredenciales  = x.AlmacenamientoCredenciales,
+                    BuscarRecursos              = x.BuscarRecursos,
+                    CreadoFecha                 = x.CreadoFecha,
+                    CreadoPor                   = x.CreadoPor,
+                    IdUsuarioInstitucion        = x.IdUsuarioInstitucion,
+                    Institucion                 = x.Institucion,
+                    LinkEstatusName             = x.LinkEstatusName,
+                    LinkVencimiento             = x.LinkVencimiento,
+                    ModoAcceso                  = x.ModoAcceso,
+                    TasaActualizacion           = x.TasaActualizacion,
+                    UltimoAccesoFecha           = x.UltimoAccesoFecha,
+                });
+            });
 
-            // Construir el objeto de devolución con la lista proyectada y otras propiedades.
             var objReturn = new
             {
-                rows        = lstRows,
-                count       = objDataTableResult.count,
-                length      = objDataTableResult.length,
-                pages       = objDataTableResult.pages,
-                page        = objDataTableResult.page,
+                rows    = lstRows,
+                count   = objDataTableResult.count,
+                length  = objDataTableResult.length,
+                pages   = objDataTableResult.pages,
+                page    = objDataTableResult.page,
             };
 
             return objReturn;
@@ -187,37 +179,29 @@ namespace API.Belvo.Services
         public async Task Delete(dynamic data, ClaimsPrincipal user)
         {
             using var objTransaction = _context.Database.BeginTransaction();
-            try
-            {
-                string id       = Globals.ParseGuid(data.idLink);
-                Link objModel   = await Find(id) ?? throw new ArgumentException($"No se encontró el link con el Id: {id}");
 
-                if (objModel.Deleted) { throw new InvalidOperationException($"El objeto Link con el Id {id} ya ha sido marcado como eliminado."); }
+            string id = Globals.ParseGuid(data.idLink);
+            Link objModel = await Find(id) ?? throw new ArgumentException(String.Format("No se encontró el link con el Id: {0}", id));
 
-                objModel.Deleted = true;
-                objModel.SetUpdated(Globals.GetUser(user));
+            if (objModel.Deleted) { throw new ArgumentException(String.Format("El link con el Id {0} ya había sido eliminado previamente.", id)); }
 
-                _context.Links.Update(objModel);
-                await _context.SaveChangesAsync();
-                objTransaction.Commit();
-            }
-            catch (Exception ex)
-            {
-                objTransaction.Rollback();
-                throw new ArgumentException("Error al eliminar el objeto Link: " + ex.Message, ex);
-            }
+            objModel.Deleted = true;
+            objModel.SetUpdated(Globals.GetUser(user));
+
+            _context.Links.Update(objModel);
+            await _context.SaveChangesAsync();
+            objTransaction.Commit();
         }
 
         public async Task<Link> Find(string id)
         {
-            var link = await _context.Links.FindAsync(id);
-            return link ?? throw new ArgumentException($"No se encontró el link con el Id: {id}");
+            return await _context.Links.FindAsync(id) ?? throw new ArgumentException(String.Format("No se encontró el link con el Id: {0}", id));
         }
 
         public async Task<Link> FindSelectorById(string id, string fields)
         {
             var link = await _context.Links.Where(x => x.IdLink == id).Select(Globals.BuildSelector<Link, Link>(fields)).FirstOrDefaultAsync();
-            return link ?? throw new ArgumentException($"No se encontró el link con el Id: {id} o el campo especificado '{fields}' no es válido en la búsqueda.");
+            return link ?? throw new ArgumentException(String.Format("No se encontró el link con el Id: {0} o el campo especificado '{1}' no es válido en la búsqueda.", id, fields));
         }
 
         public async Task<List<dynamic>> List()
@@ -228,7 +212,7 @@ namespace API.Belvo.Services
         public async Task<List<dynamic>> ListSelectorById(string id, string fields)
         {
             var link = await _context.Links.Where(x => !x.Deleted && x.IdLink == id).Select(Globals.BuildSelector<Link, Link>(fields)).ToListAsync<dynamic>();
-            return link ?? throw new ArgumentException($"No se encontró el link con el Id: {id} o el campo especificado '{fields}' no es válido en la búsqueda.");
+            return link ?? throw new ArgumentException(String.Format("No se encontró el link con el Id: {0} o el campo especificado '{1}' no es válido en la búsqueda.", id, fields));
         }
 
         public Task<byte[]> Reporte(dynamic data)
@@ -238,34 +222,26 @@ namespace API.Belvo.Services
 
         public async Task Update(dynamic data, ClaimsPrincipal user)
         {
-            using var objTransaction = _context.Database.BeginTransaction();            
-            try
-            {
-                string id       = Globals.ParseGuid(data.idLink);
-                Link objModel   = await Find(id) ?? throw new ArgumentException($"No se encontró el link con el Id: {id}");
+            using var objTransaction = _context.Database.BeginTransaction();
+            
+            string id       = Globals.ParseGuid(data.idLink);
+            Link objModel   = await Find(id) ?? throw new ArgumentException(String.Format("No se encontró el link con el Id: {0}", id));
 
-                objModel.ModoAcceso                  = data.access_mode;
-                objModel.CreadoFecha                 = data.created_at;
-                objModel.CreadoPor                   = data.created_by;
-                objModel.AlmacenamientoCredenciales  = data.credentials_storage;
-                objModel.BuscarRecursos              = JsonConvert.SerializeObject(data.fetch_resources);
-                objModel.Institucion                 = data.institution;
-                objModel.IdUsuarioInstitucion        = data.institution_user_id;
-                objModel.UltimoAccesoFecha           = data.last_accessed_at;
-                objModel.TasaActualizacion           = data.refresh_rate;
-                objModel.LinkVencimiento             = data.stale_in;
-                objModel.LinkEstatusName             = data.status;
+            objModel.ModoAcceso                  = data.access_mode;
+            objModel.CreadoFecha                 = data.created_at;
+            objModel.CreadoPor                   = data.created_by;
+            objModel.AlmacenamientoCredenciales  = data.credentials_storage;
+            objModel.BuscarRecursos              = JsonConvert.SerializeObject(data.fetch_resources);
+            objModel.Institucion                 = data.institution;
+            objModel.IdUsuarioInstitucion        = data.institution_user_id;
+            objModel.UltimoAccesoFecha           = data.last_accessed_at;
+            objModel.TasaActualizacion           = data.refresh_rate;
+            objModel.LinkVencimiento             = data.stale_in;
+            objModel.LinkEstatusName             = data.status;
 
-                _context.Links.Update(objModel);
-                await _context.SaveChangesAsync();
-                objTransaction.Commit();
-            }
-
-            catch (Exception ex)
-            {
-                objTransaction.Rollback();
-                throw new ArgumentException("Error al actualizar el objeto Link: " + ex.Message, ex);
-            }
+            _context.Links.Update(objModel);
+            await _context.SaveChangesAsync();
+            objTransaction.Commit();
         }
     }
 }

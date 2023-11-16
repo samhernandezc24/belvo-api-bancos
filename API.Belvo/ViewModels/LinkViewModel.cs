@@ -7,7 +7,6 @@
         public string ModoAcceso { get; set; }
         public DateTime UltimoAccesoFecha { get; set; }
         public DateTime CreadoFecha { get; set; }
-        public string IdExterno { get; set; }
         public string IdUsuarioInstitucion { get; set; }
         public string LinkEstatusName { get; set; }
         public string CreadoPor { get; set; }

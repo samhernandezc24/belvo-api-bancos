@@ -12,11 +12,13 @@ namespace API.Belvo.Utils
             // MAPEO PARA DEVOLVER EL DATASOURCE_EXPRESSION
             #region
             CreateMap<Cuenta, CuentaViewModel>();
+            CreateMap<Transaccion, TransaccionViewModel>();
             #endregion
 
             // MAPEO PARA REPORTE
             #region
             CreateMap<CuentaViewModel, RepCuenta>();
+            CreateMap<TransaccionViewModel, RepTransaccion>();
             #endregion
         }
     }
