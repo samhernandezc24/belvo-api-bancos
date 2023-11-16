@@ -72,24 +72,17 @@ namespace API.Belvo.Services
         */
         public static async Task<CuentaListResult> AccountsCompleteRequest(ReqCompleteRequestAccounts objBodyParams)
         {
-            try
-            {
-                var result = await WebServiceManager.Patch(GlobalVariables.belvoApiUrl + "api/accounts", GlobalVariables.lstHeaders, objBodyParams);
+            WebManagerResultView result = await WebServiceManager.Patch(GlobalVariables.belvoApiUrl + "api/accounts", GlobalVariables.lstHeaders, objBodyParams);
 
-                if (!result.isSuccessful) { throw new ArgumentException($"No se ha podido completar la operación para reanudar una sesión de recuperación para la cuenta. Código de Estado: {result.statusCode}"); }
-
-                CuentaListResult objAccountData = JsonConvert.DeserializeObject<CuentaListResult>(result.content);
-
-                return objAccountData;
-            }
-            catch (HttpRequestException httpEx)
+            if (!result.isSuccessful) 
             {
-                throw new ArgumentException("Ha ocurrido un error en la petición HTTP: " + httpEx.Message, httpEx);
+                List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
+                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message)); 
             }
-            catch (Exception ex)
-            {
-                throw new ArgumentException("Ha ocurrido un error inesperado: " + ex.Message, ex);
-            }
+
+            CuentaListResult objAccountData = JsonConvert.DeserializeObject<CuentaListResult>(result.content);
+
+            return objAccountData;
         }
 
         /*
@@ -124,20 +117,14 @@ namespace API.Belvo.Services
         | como propietarios, de la cuenta Belvo.
         |
         */
-        public static async Task<dynamic> AccountsDelete(string Id)
+        public static async Task AccountsDelete(string Id)
         {
-            try
+            WebManagerResultView result = await WebServiceManager.Delete(GlobalVariables.belvoApiUrl + "api/accounts/" + Id, GlobalVariables.lstHeaders);
+            
+            if (!result.isSuccessful) 
             {
-                var result = await WebServiceManager.Delete(GlobalVariables.belvoApiUrl + "api/accounts/" + Id, GlobalVariables.lstHeaders);
-                return result;
-            }
-            catch (HttpRequestException httpEx)
-            {
-                throw new ArgumentException("Ha ocurrido un error en la petición HTTP: " + httpEx.Message, httpEx);
-            }
-            catch (Exception ex)
-            {
-                throw new ArgumentException("Ha ocurrido un error inesperado: " + ex.Message, ex);
+                List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
+                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
             }
         }
         #endregion
@@ -254,24 +241,17 @@ namespace API.Belvo.Services
        */
         public static async Task<LinkListResult> LinksCompleteRequest(ReqCompleteRequestLinks objBodyParams)
         {
-            try
-            {
-                var result = await WebServiceManager.Patch(GlobalVariables.belvoApiUrl + "api/links", GlobalVariables.lstHeaders, objBodyParams);
+            WebManagerResultView result = await WebServiceManager.Patch(GlobalVariables.belvoApiUrl + "api/links", GlobalVariables.lstHeaders, objBodyParams);
 
-                if (!result.isSuccessful) { throw new ArgumentException($"No se ha podido completar la operación de reanudación de sesión para el link. Código de Estado: {result.statusCode}"); }
-
-                LinkListResult objLinkData = JsonConvert.DeserializeObject<LinkListResult>(result.content);
-
-                return objLinkData;
-            }
-            catch (HttpRequestException httpEx)
+            if (!result.isSuccessful)
             {
-                throw new ArgumentException("Ha ocurrido un error en la petición HTTP: " + httpEx.Message, httpEx);
+                List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
+                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
             }
-            catch (Exception ex)
-            {
-                throw new ArgumentException("Ha ocurrido un error inesperado: " + ex.Message, ex);
-            }
+
+            LinkListResult objLinkData = JsonConvert.DeserializeObject<LinkListResult>(result.content);
+
+            return objLinkData;
         }
 
         /*
@@ -282,21 +262,19 @@ namespace API.Belvo.Services
         | Obtiene los detalles de un "Link" específico.
         |
         */
-        public static async Task<dynamic> LinksDetails(string Id)
+        public static async Task<LinkListResult> LinksDetails(string Id)
         {
-            try
+            WebManagerResultView result = await WebServiceManager.Get(GlobalVariables.belvoApiUrl + "api/links/" + Id, GlobalVariables.lstHeaders);
+
+            if (!result.isSuccessful)
             {
-                var result = await WebServiceManager.Get(GlobalVariables.belvoApiUrl + "api/links/" + Id, GlobalVariables.lstHeaders);
-                return result;
+                List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
+                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
             }
-            catch (HttpRequestException httpEx)
-            {
-                throw new ArgumentException("Ha ocurrido un error en la petición HTTP: " + httpEx.Message, httpEx);
-            }
-            catch (Exception ex)
-            {
-                throw new ArgumentException("Ha ocurrido un error inesperado: " + ex.Message, ex);
-            }
+
+            LinkListResult objLinkData = JsonConvert.DeserializeObject<LinkListResult>(result.content);
+
+            return objLinkData;
         }
 
         /*
@@ -311,21 +289,19 @@ namespace API.Belvo.Services
         | actualizarán al día siguiente en el intervalo programado.
         |
         */
-        public static async Task<dynamic> LinksChangeAccessMode(string Id, dynamic objBodyParams)
+        public static async Task<LinkListResult> LinksChangeAccessMode(string Id, ReqChangeAccessModeLinks objBodyParams)
         {
-            try
+            WebManagerResultView result = await WebServiceManager.Patch(GlobalVariables.belvoApiUrl + "api/links/" + Id, GlobalVariables.lstHeaders, objBodyParams);
+
+            if (!result.isSuccessful)
             {
-                var result = await WebServiceManager.Patch(GlobalVariables.belvoApiUrl + "api/links/" + Id, GlobalVariables.lstHeaders, objBodyParams);
-                return result;
+                List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
+                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
             }
-            catch (HttpRequestException httpEx)
-            {
-                throw new ArgumentException("Ha ocurrido un error en la petición HTTP: " + httpEx.Message, httpEx);
-            }
-            catch (Exception ex)
-            {
-                throw new ArgumentException("Ha ocurrido un error inesperado: " + ex.Message, ex);
-            }
+
+            LinkListResult objLinkData = JsonConvert.DeserializeObject<LinkListResult>(result.content);
+
+            return objLinkData;
         }
 
         /*
@@ -340,21 +316,19 @@ namespace API.Belvo.Services
         | actualizarán al día siguiente en el intervalo programado.
         |
         */
-        public static async Task<dynamic> LinksUpdateCredentials(string Id, dynamic objBodyParams)
+        public static async Task<LinkListResult> LinksUpdateCredentials(string Id, ReqUpdateCredentialsLinks objBodyParams)
         {
-            try
+            WebManagerResultView result = await WebServiceManager.Put(GlobalVariables.belvoApiUrl + "api/links/" + Id, GlobalVariables.lstHeaders, objBodyParams);
+
+            if (!result.isSuccessful)
             {
-                var result = await WebServiceManager.Put(GlobalVariables.belvoApiUrl + "api/links/" + Id, GlobalVariables.lstHeaders, objBodyParams);
-                return result;
+                List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
+                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
             }
-            catch (HttpRequestException httpEx)
-            {
-                throw new ArgumentException("Ha ocurrido un error en la petición HTTP: " + httpEx.Message, httpEx);
-            }
-            catch (Exception ex)
-            {
-                throw new ArgumentException("Ha ocurrido un error inesperado: " + ex.Message, ex);
-            }
+
+            LinkListResult objLinkData = JsonConvert.DeserializeObject<LinkListResult>(result.content);
+
+            return objLinkData;
         }
 
         /*
@@ -366,20 +340,15 @@ namespace API.Belvo.Services
         | como propietarios, de la cuenta Belvo.
         |
         */
-        public static async Task<dynamic> LinksDelete(string Id)
+        public static async Task LinksDelete(string Id)
         {
-            try
+
+            WebManagerResultView result = await WebServiceManager.Delete(GlobalVariables.belvoApiUrl + "api/links/" + Id, GlobalVariables.lstHeaders);
+
+            if (!result.isSuccessful)
             {
-                var result = await WebServiceManager.Delete(GlobalVariables.belvoApiUrl + "api/links/" + Id, GlobalVariables.lstHeaders);
-                return result;
-            }
-            catch (HttpRequestException httpEx)
-            {
-                throw new ArgumentException("Ha ocurrido un error en la petición HTTP: " + httpEx.Message, httpEx);
-            }
-            catch (Exception ex)
-            {
-                throw new ArgumentException("Ha ocurrido un error inesperado: " + ex.Message, ex);
+                List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
+                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
             }
         }
         #endregion
