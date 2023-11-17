@@ -4,6 +4,7 @@ using API.Belvo.ViewModels.Generic;
 using API.Belvo.ViewModels.Requests;
 using Newtonsoft.Json;
 using Workcube.Libraries;
+using Workcube.ViewModels;
 
 namespace API.Belvo.Services
 {
@@ -25,7 +26,7 @@ namespace API.Belvo.Services
         */
         public static async Task<List<CuentaListResult>> AccountsList()
         {
-            WebManagerResultView result = await WebServiceManager.Get(GlobalVariables.belvoApiUrl + "api/accounts", GlobalVariables.lstHeaders);
+            ModelWebManagerResult result = await WebServiceManager.Get(GlobalVariables.belvoApiUrl + "api/accounts", GlobalVariables.lstHeaders);
 
             if (!result.isSuccessful)
             {
@@ -48,7 +49,7 @@ namespace API.Belvo.Services
         */
         public static async Task<CuentaListResult> AccountsRetrieveForLink(ReqStoreAccount objBodyParams)
         {
-            WebManagerResultView result = await WebServiceManager.Post(GlobalVariables.belvoApiUrl + "api/accounts", GlobalVariables.lstHeaders, objBodyParams);
+            ModelWebManagerResult result = await WebServiceManager.Post(GlobalVariables.belvoApiUrl + "api/accounts", GlobalVariables.lstHeaders, objBodyParams);
 
             if (!result.isSuccessful)
             {
@@ -71,7 +72,7 @@ namespace API.Belvo.Services
         */
         public static async Task<List<CuentaListResult>> AccountsListForLink(ReqStoreAccount objBodyParams)
         {
-            WebManagerResultView result = await WebServiceManager.Post(GlobalVariables.belvoApiUrl + "api/accounts", GlobalVariables.lstHeaders, objBodyParams);
+            ModelWebManagerResult result = await WebServiceManager.Post(GlobalVariables.belvoApiUrl + "api/accounts", GlobalVariables.lstHeaders, objBodyParams);
 
             if (!result.isSuccessful)
             {
@@ -95,7 +96,7 @@ namespace API.Belvo.Services
         */
         public static async Task<CuentaListResult> AccountsCompleteRequest(ReqCompleteRequestAccounts objBodyParams)
         {
-            WebManagerResultView result = await WebServiceManager.Patch(GlobalVariables.belvoApiUrl + "api/accounts", GlobalVariables.lstHeaders, objBodyParams);
+            ModelWebManagerResult result = await WebServiceManager.Patch(GlobalVariables.belvoApiUrl + "api/accounts", GlobalVariables.lstHeaders, objBodyParams);
 
             if (!result.isSuccessful) 
             {
@@ -118,7 +119,7 @@ namespace API.Belvo.Services
         */
         public static async Task<CuentaListResult> AccountsDetails(string Id)
         {
-            WebManagerResultView result = await WebServiceManager.Get(GlobalVariables.belvoApiUrl + "api/accounts/" + Id, GlobalVariables.lstHeaders);
+            ModelWebManagerResult result = await WebServiceManager.Get(GlobalVariables.belvoApiUrl + "api/accounts/" + Id, GlobalVariables.lstHeaders);
 
             if (!result.isSuccessful)
             {
@@ -142,7 +143,7 @@ namespace API.Belvo.Services
         */
         public static async Task AccountsDelete(string Id)
         {
-            WebManagerResultView result = await WebServiceManager.Delete(GlobalVariables.belvoApiUrl + "api/accounts/" + Id, GlobalVariables.lstHeaders);
+            ModelWebManagerResult result = await WebServiceManager.Delete(GlobalVariables.belvoApiUrl + "api/accounts/" + Id, GlobalVariables.lstHeaders);
             
             if (!result.isSuccessful) 
             {
@@ -166,7 +167,7 @@ namespace API.Belvo.Services
         */
         public static async Task<List<InstitucionListResult>> InstitutionsList()
         {
-            WebManagerResultView result = await WebServiceManager.Get(GlobalVariables.belvoApiUrl + "api/institutions", GlobalVariables.lstHeaders);
+            ModelWebManagerResult result = await WebServiceManager.Get(GlobalVariables.belvoApiUrl + "api/institutions", GlobalVariables.lstHeaders);
 
             if (!result.isSuccessful)
             {
@@ -189,7 +190,7 @@ namespace API.Belvo.Services
         */
         public static async Task<InstitucionListResult> InstitutionsDetails(string Id)
         {
-            WebManagerResultView result = await WebServiceManager.Get(GlobalVariables.belvoApiUrl + "api/institutions/" + Id, GlobalVariables.lstHeaders);
+            ModelWebManagerResult result = await WebServiceManager.Get(GlobalVariables.belvoApiUrl + "api/institutions/" + Id, GlobalVariables.lstHeaders);
 
             if (!result.isSuccessful)
             {
@@ -217,7 +218,7 @@ namespace API.Belvo.Services
         */
         public static async Task<List<LinkListResult>> LinksList()
         {
-            WebManagerResultView result = await WebServiceManager.Get(GlobalVariables.belvoApiUrl + "api/links", GlobalVariables.lstHeaders);
+            ModelWebManagerResult result = await WebServiceManager.Get(GlobalVariables.belvoApiUrl + "api/links", GlobalVariables.lstHeaders);
 
             if (!result.isSuccessful)
             {
@@ -240,7 +241,7 @@ namespace API.Belvo.Services
         */
         public static async Task<LinkListResult> LinksStore(ReqStoreLink objBodyParams)
         {
-            WebManagerResultView result = await WebServiceManager.Post(GlobalVariables.belvoApiUrl + "api/links", GlobalVariables.lstHeaders, objBodyParams);
+            ModelWebManagerResult result = await WebServiceManager.Post(GlobalVariables.belvoApiUrl + "api/links", GlobalVariables.lstHeaders, objBodyParams);
 
             if (!result.isSuccessful)
             {
@@ -264,7 +265,7 @@ namespace API.Belvo.Services
        */
         public static async Task<LinkListResult> LinksCompleteRequest(ReqCompleteRequestLinks objBodyParams)
         {
-            WebManagerResultView result = await WebServiceManager.Patch(GlobalVariables.belvoApiUrl + "api/links", GlobalVariables.lstHeaders, objBodyParams);
+            ModelWebManagerResult result = await WebServiceManager.Patch(GlobalVariables.belvoApiUrl + "api/links", GlobalVariables.lstHeaders, objBodyParams);
 
             if (!result.isSuccessful)
             {
@@ -287,7 +288,7 @@ namespace API.Belvo.Services
         */
         public static async Task<LinkListResult> LinksDetails(string Id)
         {
-            WebManagerResultView result = await WebServiceManager.Get(GlobalVariables.belvoApiUrl + "api/links/" + Id, GlobalVariables.lstHeaders);
+            ModelWebManagerResult result = await WebServiceManager.Get(GlobalVariables.belvoApiUrl + "api/links/" + Id, GlobalVariables.lstHeaders);
 
             if (!result.isSuccessful)
             {
@@ -314,7 +315,7 @@ namespace API.Belvo.Services
         */
         public static async Task<LinkListResult> LinksChangeAccessMode(string Id, ReqChangeAccessModeLinks objBodyParams)
         {
-            WebManagerResultView result = await WebServiceManager.Patch(GlobalVariables.belvoApiUrl + "api/links/" + Id, GlobalVariables.lstHeaders, objBodyParams);
+            ModelWebManagerResult result = await WebServiceManager.Patch(GlobalVariables.belvoApiUrl + "api/links/" + Id, GlobalVariables.lstHeaders, objBodyParams);
 
             if (!result.isSuccessful)
             {
@@ -341,7 +342,7 @@ namespace API.Belvo.Services
         */
         public static async Task<LinkListResult> LinksUpdateCredentials(string Id, ReqUpdateCredentialsLinks objBodyParams)
         {
-            WebManagerResultView result = await WebServiceManager.Put(GlobalVariables.belvoApiUrl + "api/links/" + Id, GlobalVariables.lstHeaders, objBodyParams);
+            ModelWebManagerResult result = await WebServiceManager.Put(GlobalVariables.belvoApiUrl + "api/links/" + Id, GlobalVariables.lstHeaders, objBodyParams);
 
             if (!result.isSuccessful)
             {
@@ -366,7 +367,7 @@ namespace API.Belvo.Services
         public static async Task LinksDelete(string Id)
         {
 
-            WebManagerResultView result = await WebServiceManager.Delete(GlobalVariables.belvoApiUrl + "api/links/" + Id, GlobalVariables.lstHeaders);
+            ModelWebManagerResult result = await WebServiceManager.Delete(GlobalVariables.belvoApiUrl + "api/links/" + Id, GlobalVariables.lstHeaders);
 
             if (!result.isSuccessful)
             {
@@ -390,7 +391,7 @@ namespace API.Belvo.Services
         */
         public static async Task<List<TransaccionListResult>> TransactionsList(ReqListTransaction objQueryParams)
         {
-            WebManagerResultView result = await WebServiceManager.Post(GlobalVariables.belvoApiUrl + "api/transactions", GlobalVariables.lstHeaders, objQueryParams);
+            ModelWebManagerResult result = await WebServiceManager.Post(GlobalVariables.belvoApiUrl + "api/transactions", GlobalVariables.lstHeaders, objQueryParams);
 
             if (!result.isSuccessful)
             {
@@ -414,7 +415,7 @@ namespace API.Belvo.Services
         */
         public static async Task<TransaccionListResult> TransactionsRetrieveForLink(ReqStoreTransaction objBodyParams)
         {
-            WebManagerResultView result = await WebServiceManager.Post(GlobalVariables.belvoApiUrl + "api/transactions", GlobalVariables.lstHeaders, objBodyParams);
+            ModelWebManagerResult result = await WebServiceManager.Post(GlobalVariables.belvoApiUrl + "api/transactions", GlobalVariables.lstHeaders, objBodyParams);
 
             if (!result.isSuccessful) 
             {
@@ -438,7 +439,7 @@ namespace API.Belvo.Services
        */
         public static async Task<TransaccionListResult> TransactionsCompleteRequest(ReqCompleteRequestTransactions objBodyParams)
         {
-            WebManagerResultView result = await WebServiceManager.Patch(GlobalVariables.belvoApiUrl + "api/transactions", GlobalVariables.lstHeaders, objBodyParams);
+            ModelWebManagerResult result = await WebServiceManager.Patch(GlobalVariables.belvoApiUrl + "api/transactions", GlobalVariables.lstHeaders, objBodyParams);
 
             if (!result.isSuccessful) 
             {
@@ -461,7 +462,7 @@ namespace API.Belvo.Services
         */
         public static async Task<TransaccionListResult> TransactionsDetails(string Id)
         {
-            WebManagerResultView result = await WebServiceManager.Patch(GlobalVariables.belvoApiUrl + "api/transactions/" + Id, GlobalVariables.lstHeaders);
+            ModelWebManagerResult result = await WebServiceManager.Patch(GlobalVariables.belvoApiUrl + "api/transactions/" + Id, GlobalVariables.lstHeaders);
 
             if (!result.isSuccessful)
             {
@@ -484,7 +485,7 @@ namespace API.Belvo.Services
         */
         public static async Task TransactionsDelete(string Id)
         {
-            WebManagerResultView result = await WebServiceManager.Delete(GlobalVariables.belvoApiUrl + "api/transactions/" + Id, GlobalVariables.lstHeaders);
+            ModelWebManagerResult result = await WebServiceManager.Delete(GlobalVariables.belvoApiUrl + "api/transactions/" + Id, GlobalVariables.lstHeaders);
 
             if (!result.isSuccessful)
             {
