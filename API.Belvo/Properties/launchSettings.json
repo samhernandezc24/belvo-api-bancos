@@ -1,22 +1,41 @@
-{ 
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:8001",
+      "sslPort": 8001
+    }
+  },
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "API.Belvo": {
-        "commandName": "Project",
+    "IIS Express": {
+        "commandName": "IISExpress",
         "launchBrowser": true,
         "launchUrl": "swagger",
         "environmentVariables": {
             "ASPNETCORE_ENVIRONMENT": "Development"
         },
-        "dotnetRunMessages": true,
-        "applicationUrl": "https://localhost:60685;http://localhost:60685"
+        "applicationUrl": "{Scheme}://{ServiceHost}:8001"
+    },
+    "API.Belvo": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:8000;http://localhost:8001",
+      "httpPort": 8001
     },
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
+      "launchUrl": "{Scheme}://{ServiceHost}:8001/swagger",
       "publishAllPorts": true,
-      "useSSL": true
+      "useSSL": false,
+      "httpPort": 8001
     }
-  }
+  }  
 }
