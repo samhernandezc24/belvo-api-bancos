@@ -29,7 +29,7 @@ namespace API.Belvo.Services
 
         public async Task Create(dynamic data, ClaimsPrincipal user)
         {
-            using var objTransaction = _context.Database.BeginTransaction();
+            var objTransaction = _context.Database.BeginTransaction();
 
             ReqStoreLink objParamsLink = new ReqStoreLink
             {
@@ -147,8 +147,8 @@ namespace API.Belvo.Services
             {
                 lstRows.Add(new
                 {
-                    IdCuenta    = x.IdCuenta,
-                    IdLink      = x.IdLink,
+                    IdCuenta = x.IdCuenta,
+                    IdLink   = x.IdLink,
                 });
             });
 
@@ -239,7 +239,7 @@ namespace API.Belvo.Services
 
         public async Task Delete(dynamic data, ClaimsPrincipal user)
         {
-            using var objTransaction = _context.Database.BeginTransaction();
+            var objTransaction = _context.Database.BeginTransaction();
 
             string id = Globals.ParseGuid(data.idCuenta);
             Cuenta objModel = await Find(id) ?? throw new ArgumentException(String.Format("No se encontró la cuenta con el Id: {0}", id));
@@ -315,7 +315,7 @@ namespace API.Belvo.Services
 
         public async Task Update(dynamic data, ClaimsPrincipal user)
         {
-            using var objTransaction = _context.Database.BeginTransaction();
+            var objTransaction = _context.Database.BeginTransaction();
 
             string id       = Globals.ParseGuid(data.idCuenta);
             Cuenta objModel = await Find(id) ?? throw new ArgumentException(String.Format("No se encontró la cuenta con el Id: {0}", id));
@@ -379,7 +379,7 @@ namespace API.Belvo.Services
             objModel.CuentasPorCobrarDisponible         = data.receivables_data?.available      ?? 0;
             objModel.CuentasPorCobrarRecoleccionFecha   = data.receivables_data?.collected_at   ?? null;
             objModel.CuentasPorCobrarActual             = data.receivables_data?.current        ?? 0;
-            // objModel.SetUpdated(Globals.GetUser(user));
+            objModel.SetUpdated(Globals.GetUser(user));
 
             _context.Cuentas.Update(objModel);
             await _context.SaveChangesAsync();

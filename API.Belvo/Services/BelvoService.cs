@@ -31,7 +31,7 @@ namespace API.Belvo.Services
             if (!result.isSuccessful)
             {
                 var lstMessage = JsonConvert.DeserializeObject<List<dynamic>>(result.content);
-                throw new ArgumentException(String.Format("{0} . {1}", Globals.ToString(lstMessage[0].code), Globals.ToString(lstMessage[1].message)));
+                throw new ArgumentException(String.Format("{0} - {1}", Globals.ToString(lstMessage[0].code), Globals.ToString(lstMessage[1].message)));
             }
 
             BelvoCuentaViewModel objAccountData = JsonConvert.DeserializeObject<BelvoCuentaViewModel>(result.content);
@@ -54,7 +54,7 @@ namespace API.Belvo.Services
             if (!result.isSuccessful)
             {
                 List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
-                throw new ArgumentException(String.Format("{0} . {1}", lstMessage[0].code, lstMessage[1].message));
+                throw new ArgumentException(String.Format("{0} - {1}", lstMessage[0].code, lstMessage[1].message));
             }
 
             CuentaListResult objAccountData = JsonConvert.DeserializeObject<CuentaListResult>(result.content);

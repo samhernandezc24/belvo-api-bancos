@@ -30,7 +30,7 @@ namespace API.Belvo.Services
 
         public async Task Create(dynamic data)
         {
-            using var objTransaction = _context.Database.BeginTransaction();
+            var objTransaction = _context.Database.BeginTransaction();
 
             Transaccion objModel                        = new Transaccion();            
             objModel.IdTransaccion                      = data.id;
@@ -190,7 +190,7 @@ namespace API.Belvo.Services
 
         public async Task Delete(dynamic data, ClaimsPrincipal user)
         {
-            using var objTransaction = _context.Database.BeginTransaction();
+            var objTransaction = _context.Database.BeginTransaction();
 
             string id = Globals.ParseGuid(data.idTransaccion);
             Transaccion objModel = await Find(id) ?? throw new ArgumentException(String.Format("No se encontró la transacción con el Id: {0}", id));
@@ -234,7 +234,7 @@ namespace API.Belvo.Services
 
         public async Task Update(dynamic data, ClaimsPrincipal user)
         {
-            using var objTransaction = _context.Database.BeginTransaction();
+            var objTransaction = _context.Database.BeginTransaction();
 
             string id               = Globals.ParseGuid(data.idTransaccion);
             Transaccion objModel    = await Find(id) ?? throw new ArgumentException(String.Format("No se encontró la transacción con el Id: {0}", id));

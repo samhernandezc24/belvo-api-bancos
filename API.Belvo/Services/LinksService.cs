@@ -31,7 +31,7 @@ namespace API.Belvo.Services
 
         public async Task Create(LinkListResult data)
         {
-            // using var objTransaction = _context.Database.BeginTransaction();
+            // var objTransaction = _context.Database.BeginTransaction();
 
             var objUser = new ModelGetUser { Id = data.id, Nombre = "Admin Manager" };
 
@@ -176,7 +176,7 @@ namespace API.Belvo.Services
 
         public async Task Delete(dynamic data, ClaimsPrincipal user)
         {
-            using var objTransaction = _context.Database.BeginTransaction();
+            var objTransaction = _context.Database.BeginTransaction();
 
             string id = Globals.ParseGuid(data.idLink);
             Link objModel = await Find(id) ?? throw new ArgumentException(String.Format("No se encontró el link con el Id: {0}", id));
@@ -220,7 +220,7 @@ namespace API.Belvo.Services
 
         public async Task Update(dynamic data, ClaimsPrincipal user)
         {
-            using var objTransaction = _context.Database.BeginTransaction();
+            var objTransaction = _context.Database.BeginTransaction();
             
             string id       = Globals.ParseGuid(data.idLink);
             Link objModel   = await Find(id) ?? throw new ArgumentException(String.Format("No se encontró el link con el Id: {0}", id));

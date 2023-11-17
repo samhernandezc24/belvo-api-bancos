@@ -1,6 +1,7 @@
-﻿using API.Belvo.Services;
-using System.Text.Json.Nodes;
+﻿using API.Belvo.Libraries;
+using API.Belvo.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json.Nodes;
 using Workcube.Libraries;
 
 namespace API.Belvo.Controllers
@@ -54,6 +55,7 @@ namespace API.Belvo.Controllers
             try
             {
                 objReturn.Result = await _cuentasService.DataSource(Globals.JsonData(data));
+
                 objReturn.Success(SuccessMessage.REQUEST);
             }
             catch (AppException appEx)
@@ -79,7 +81,8 @@ namespace API.Belvo.Controllers
 
                 objReturn.Result = new
                 {
-                    instituciones = lstInstituciones,
+                    claveERP        = GlobalVariables.claveERP,
+                    instituciones   = lstInstituciones,
                 };
 
                 objReturn.Success(SuccessMessage.REQUEST);
@@ -159,6 +162,7 @@ namespace API.Belvo.Controllers
                 };
 
                 objReturn.Result = objModel;
+
                 objReturn.Success(SuccessMessage.REQUEST);
             }
             catch (AppException appEx)
