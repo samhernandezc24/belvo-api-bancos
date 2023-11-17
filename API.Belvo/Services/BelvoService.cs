@@ -31,7 +31,7 @@ namespace API.Belvo.Services
             if (!result.isSuccessful)
             {
                 var lstMessage = JsonConvert.DeserializeObject<List<dynamic>>(result.content);
-                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", Globals.ToString(lstMessage[0].code), Globals.ToString(lstMessage[1].message)));
+                throw new ArgumentException(String.Format("{0} . {1}", Globals.ToString(lstMessage[0].code), Globals.ToString(lstMessage[1].message)));
             }
 
             BelvoCuentaViewModel objAccountData = JsonConvert.DeserializeObject<BelvoCuentaViewModel>(result.content);
@@ -54,7 +54,7 @@ namespace API.Belvo.Services
             if (!result.isSuccessful)
             {
                 List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
-                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
+                throw new ArgumentException(String.Format("{0} . {1}", lstMessage[0].code, lstMessage[1].message));
             }
 
             CuentaListResult objAccountData = JsonConvert.DeserializeObject<CuentaListResult>(result.content);
@@ -77,7 +77,7 @@ namespace API.Belvo.Services
             if (!result.isSuccessful)
             {
                 List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
-                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
+                throw new ArgumentException(String.Format("{0} - {1}", lstMessage[0].code, lstMessage[1].message));
             }
 
             List<CuentaListResult> lstAccounts = JsonConvert.DeserializeObject<List<CuentaListResult>>(result.content);
@@ -101,7 +101,7 @@ namespace API.Belvo.Services
             if (!result.isSuccessful) 
             {
                 List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
-                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message)); 
+                throw new ArgumentException(String.Format("{0} - {1}", lstMessage[0].code, lstMessage[1].message)); 
             }
 
             CuentaListResult objAccountData = JsonConvert.DeserializeObject<CuentaListResult>(result.content);
@@ -124,7 +124,7 @@ namespace API.Belvo.Services
             if (!result.isSuccessful)
             {
                 List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
-                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
+                throw new ArgumentException(String.Format("{0} - {1}", lstMessage[0].code, lstMessage[1].message));
             }
 
             CuentaListResult objAccountData = JsonConvert.DeserializeObject<CuentaListResult>(result.content);
@@ -148,7 +148,7 @@ namespace API.Belvo.Services
             if (!result.isSuccessful) 
             {
                 List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
-                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
+                throw new ArgumentException(String.Format("{0} - {1}", lstMessage[0].code, lstMessage[1].message));
             }
         }
         #endregion
@@ -172,7 +172,7 @@ namespace API.Belvo.Services
             if (!result.isSuccessful)
             {
                 List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
-                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
+                throw new ArgumentException(String.Format("{0} - {1}", lstMessage[0].code, lstMessage[1].message));
             }
 
             BelvoInstitucionViewModel objInstitutionData = JsonConvert.DeserializeObject<BelvoInstitucionViewModel>(result.content);
@@ -195,7 +195,7 @@ namespace API.Belvo.Services
             if (!result.isSuccessful)
             {
                 List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
-                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
+                throw new ArgumentException(String.Format("{0} - {1}", lstMessage[0].code, lstMessage[1].message));
             }
 
             InstitucionListResult objInstitutionData = JsonConvert.DeserializeObject<InstitucionListResult>(result.content);
@@ -223,7 +223,7 @@ namespace API.Belvo.Services
             if (!result.isSuccessful)
             {
                 List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
-                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
+                throw new ArgumentException(String.Format("{0} - {1}", lstMessage[0].code, lstMessage[1].message));
             }
 
             BelvoLinkViewModel objLinkData = JsonConvert.DeserializeObject<BelvoLinkViewModel>(result.content);
@@ -246,7 +246,7 @@ namespace API.Belvo.Services
             if (!result.isSuccessful)
             {
                 List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
-                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
+                throw new ArgumentException(String.Format("{0} - {1}", lstMessage[0].code, lstMessage[1].message));
             }
 
             LinkListResult objLinkData = JsonConvert.DeserializeObject<LinkListResult>(result.content);
@@ -270,7 +270,7 @@ namespace API.Belvo.Services
             if (!result.isSuccessful)
             {
                 List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
-                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
+                throw new ArgumentException(String.Format("{0} - {1}", lstMessage[0].code, lstMessage[1].message));
             }
 
             LinkListResult objLinkData = JsonConvert.DeserializeObject<LinkListResult>(result.content);
@@ -293,7 +293,7 @@ namespace API.Belvo.Services
             if (!result.isSuccessful)
             {
                 List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
-                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
+                throw new ArgumentException(String.Format("{0} - {1}", lstMessage[0].code, lstMessage[1].message));
             }
 
             LinkListResult objLinkData = JsonConvert.DeserializeObject<LinkListResult>(result.content);
@@ -320,7 +320,7 @@ namespace API.Belvo.Services
             if (!result.isSuccessful)
             {
                 List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
-                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
+                throw new ArgumentException(String.Format("{0} - {1}", lstMessage[0].code, lstMessage[1].message));
             }
 
             LinkListResult objLinkData = JsonConvert.DeserializeObject<LinkListResult>(result.content);
@@ -347,7 +347,7 @@ namespace API.Belvo.Services
             if (!result.isSuccessful)
             {
                 List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
-                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
+                throw new ArgumentException(String.Format("{0} - {1}", lstMessage[0].code, lstMessage[1].message));
             }
 
             LinkListResult objLinkData = JsonConvert.DeserializeObject<LinkListResult>(result.content);
@@ -372,7 +372,7 @@ namespace API.Belvo.Services
             if (!result.isSuccessful)
             {
                 List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
-                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
+                throw new ArgumentException(String.Format("{0} - {1}", lstMessage[0].code, lstMessage[1].message));
             }
         }
         #endregion
@@ -396,7 +396,7 @@ namespace API.Belvo.Services
             if (!result.isSuccessful)
             {
                 List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
-                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
+                throw new ArgumentException(String.Format("{0} - {1}", lstMessage[0].code, lstMessage[1].message));
             }
 
             BelvoTransaccionViewModel objTransactionData = JsonConvert.DeserializeObject<BelvoTransaccionViewModel>(result.content);
@@ -420,7 +420,7 @@ namespace API.Belvo.Services
             if (!result.isSuccessful) 
             {
                 List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
-                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
+                throw new ArgumentException(String.Format("{0} - {1}", lstMessage[0].code, lstMessage[1].message));
             }
 
             TransaccionListResult objTransactionData = JsonConvert.DeserializeObject<TransaccionListResult>(result.content);
@@ -444,7 +444,7 @@ namespace API.Belvo.Services
             if (!result.isSuccessful) 
             {
                 List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
-                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
+                throw new ArgumentException(String.Format("{0} - {1}", lstMessage[0].code, lstMessage[1].message));
             }
 
             TransaccionListResult objTransactionData = JsonConvert.DeserializeObject<TransaccionListResult>(result.content);
@@ -467,7 +467,7 @@ namespace API.Belvo.Services
             if (!result.isSuccessful)
             {
                 List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
-                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
+                throw new ArgumentException(String.Format("{0} - {1}", lstMessage[0].code, lstMessage[1].message));
             }
 
             TransaccionListResult objTransactionData = JsonConvert.DeserializeObject<TransaccionListResult>(result.content);
@@ -490,7 +490,7 @@ namespace API.Belvo.Services
             if (!result.isSuccessful)
             {
                 List<WebManagerErrorView> lstMessage = JsonConvert.DeserializeObject<List<WebManagerErrorView>>(result.content);
-                throw new ArgumentException(String.Format("Código de Estado: {0} - Mensaje: {1}", lstMessage[0].code, lstMessage[1].message));
+                throw new ArgumentException(String.Format("{0} - {1}", lstMessage[0].code, lstMessage[1].message));
             }
         }
         #endregion
